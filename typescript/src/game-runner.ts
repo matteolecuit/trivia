@@ -35,8 +35,8 @@ export class GameRunner {
                 diceRoll
             );
 
-            if (action != 2) {
-                if (Math.floor(Math.random() * 10) == 7) {
+            if (action == 0) {
+                if (Math.floor(Math.random() * 3) == 1) {
                     wrongAnswer(game.players, game.currentPlayer);
                 } else {
                     let winner = wasCorrectlyAnswered(
@@ -46,7 +46,7 @@ export class GameRunner {
                     );
                     if (winner) gameHasEnded = true;
                 }
-            } else {
+            } if(action == 2) {
                 console.log(
                     "🃏" + game.players[game.currentPlayer].name + " used a joker"
                 );
