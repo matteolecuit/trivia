@@ -40,7 +40,7 @@ export class Game {
         this.nplayers = initPlayers(playerNames);
 
         this.askRockType();
-        
+
         for (let i = 0; i < 50; i++) {
             this.popQuestions.push("Pop Question " + i);
             this.scienceQuestions.push("Science Question " + i);
@@ -49,33 +49,30 @@ export class Game {
         }
     }
 
-  private async askRockType() {
-    let rockPrompt: string = readline.question('Tu veux du rock mon copain ? (Y/N) : ');
+    private async askRockType() {
+        let rockPrompt: string = readline.question("Tu veux du rock mon copain ? (Y/N) : ");
 
-    if (rockPrompt.toLowerCase() === 'y') {
-      this.isRock = true;
-      console.log("You choose Rock")
-    } else if (rockPrompt.toLowerCase() === 'n') {
-      this.isRock = false;
-      console.log("You'll have Techno questions")
-    } else {
-      this.isRock = false;
-      console.log("Invalid answer, You'll have Techno questions")
+        if (rockPrompt.toLowerCase() === "y") {
+            this.isRock = true;
+            console.log("You choose Rock");
+        } else if (rockPrompt.toLowerCase() === "n") {
+            this.isRock = false;
+            console.log("You'll have Techno questions");
+        } else {
+            this.isRock = false;
+            console.log("Invalid answer, You'll have Techno questions");
+        }
     }
-  } 
-  
 
-  private createRockQuestion(index: number, isRock: boolean): string {
-    if (isRock) {
-      return "Rock Question " + index;
-    } else {
-      return "TECHNO Question " + index;
+    private createRockQuestion(index: number, isRock: boolean): string {
+        let type: string;
+        type = isRock ? "Rock" : "Techno";
+        return type + " Question " + index;
     }
-  }
 
     public checkPlayers(): boolean {
         if (this.players.length >= 2 && this.players.length <= 6) {
-            return true
+            return true;
         }
         return false;
     }
@@ -103,29 +100,17 @@ export class Game {
             if (roll % 2 != 0) {
                 this.isGettingOutOfPenaltyBox = true;
 
-                console.log(
-                    this.players[this.currentPlayer] +
-                    " is getting out of the penalty box"
-                );
-                this.places[this.currentPlayer] =
-                    this.places[this.currentPlayer] + roll;
+                console.log(this.players[this.currentPlayer] + " is getting out of the penalty box");
+                this.places[this.currentPlayer] = this.places[this.currentPlayer] + roll;
                 if (this.places[this.currentPlayer] > 11) {
-                    this.places[this.currentPlayer] =
-                        this.places[this.currentPlayer] - 12;
+                    this.places[this.currentPlayer] = this.places[this.currentPlayer] - 12;
                 }
 
-                console.log(
-                    this.players[this.currentPlayer] +
-                    "'s new location is " +
-                    this.places[this.currentPlayer]
-                );
+                console.log(this.players[this.currentPlayer] + "'s new location is " + this.places[this.currentPlayer]);
                 console.log("The category is " + this.currentCategory());
                 this.askQuestion();
             } else {
-                console.log(
-                    this.players[this.currentPlayer] +
-                    " is not getting out of the penalty box"
-                );
+                console.log(this.players[this.currentPlayer] + " is not getting out of the penalty box");
                 this.isGettingOutOfPenaltyBox = false;
             }
         } else {
@@ -134,11 +119,7 @@ export class Game {
                 this.places[this.currentPlayer] = this.places[this.currentPlayer] - 12;
             }
 
-            console.log(
-                this.players[this.currentPlayer] +
-                "'s new location is " +
-                this.places[this.currentPlayer]
-            );
+            console.log(this.players[this.currentPlayer] + "'s new location is " + this.places[this.currentPlayer]);
             console.log("The category is " + this.currentCategory());
             this.askQuestion();
         }
@@ -146,12 +127,9 @@ export class Game {
 
     private askQuestion(): void {
         if (this.currentCategory() == "Pop") console.log(this.popQuestions.shift());
-        if (this.currentCategory() == "Science")
-            console.log(this.scienceQuestions.shift());
-        if (this.currentCategory() == "Sports")
-            console.log(this.sportsQuestions.shift());
-        if (this.currentCategory() == "Rock")
-            console.log(this.rockQuestions.shift());
+        if (this.currentCategory() == "Science") console.log(this.scienceQuestions.shift());
+        if (this.currentCategory() == "Sports") console.log(this.sportsQuestions.shift());
+        if (this.currentCategory() == "Rock") console.log(this.rockQuestions.shift());
     }
 
     private currentCategory(): string {
@@ -173,9 +151,7 @@ export class Game {
 
     public wrongAnswer(): boolean {
         console.log("Question was incorrectly answered");
-        console.log(
-            this.players[this.currentPlayer] + " was sent to the penalty box"
-        );
+        console.log(this.players[this.currentPlayer] + " was sent to the penalty box");
         this.inPenaltyBox[this.currentPlayer] = true;
 
         this.currentPlayer += 1;
@@ -189,10 +165,7 @@ export class Game {
                 console.log("Answer was correct!!!!");
                 this.purses[this.currentPlayer] += 1;
                 console.log(
-                    this.players[this.currentPlayer] +
-                    " now 1has " +
-                    this.purses[this.currentPlayer] +
-                    " Gold Coins."
+                    this.players[this.currentPlayer] + " now 1has " + this.purses[this.currentPlayer] + " Gold Coins."
                 );
 
                 var winner = this.didPlayerWin();
@@ -210,10 +183,7 @@ export class Game {
 
             this.purses[this.currentPlayer] += 1;
             console.log(
-                this.players[this.currentPlayer] +
-                " now 2has " +
-                this.purses[this.currentPlayer] +
-                " Gold Coins."
+                this.players[this.currentPlayer] + " now 2has " + this.purses[this.currentPlayer] + " Gold Coins."
             );
 
             var winner = this.didPlayerWin();
