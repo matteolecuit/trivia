@@ -49,7 +49,7 @@ export class GameRunner {
                         game.leaderboard.push(game.players[game.currentPlayer]);
                         game.players[game.currentPlayer].hasQuit = true;
                     } 
-                    if (game.leaderboard.length === (game.players.length - game.rageQuitBoard.length)) gameHasEnded = true;
+                    if ((game.leaderboard.length === (game.players.length - game.rageQuitBoard.length)) || game.leaderboard.length === 3) gameHasEnded = true;
                 }
             } else {
                 console.log(
@@ -58,10 +58,12 @@ export class GameRunner {
             }
             game.currentPlayer = switchPlayer(game.currentPlayer, game.players);
         } while (!gameHasEnded);
-        game.rageQuitBoard.reverse();
-        game.rageQuitBoard.forEach(element => {
-            game.leaderboard.push(element);
-        })
+        if (game.leaderboard.length + game.rageQuitBoard.length >= 3) {
+            game.rageQuitBoard.reverse();
+            game.rageQuitBoard.forEach(element => {
+                game.leaderboard.push(element);
+            })
+        }
         let i = 1;
         console.log("LeaderBoard: \ ");
         game.leaderboard.forEach(element => {
