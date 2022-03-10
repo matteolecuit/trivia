@@ -1,5 +1,11 @@
 import { Game } from "./game";
-import { checkPlayers, roll, wasCorrectlyAnswered, wrongAnswer } from "./utils";
+import {
+  checkPlayers,
+  roll,
+  switchPlayer,
+  wasCorrectlyAnswered,
+  wrongAnswer,
+} from "./utils";
 
 export class GameRunner {
   public static main(): void {
@@ -32,9 +38,8 @@ export class GameRunner {
           );
           if (winner) gameHasEnded = true;
         }
-      } else {
-        gameHasEnded = false;
       }
+      game.currentPlayer = switchPlayer(game.currentPlayer, game.players);
     } while (!gameHasEnded);
   }
 }

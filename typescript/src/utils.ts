@@ -61,10 +61,13 @@ export const wrongAnswer = (players: Player[], currentPlayer: number) => {
 
   player.streak = 0;
   currentPlayer += 1;
-  if (currentPlayer == players.length) currentPlayer = 0;
-  return { players, currentPlayer };
 };
 
+export const switchPlayer = (currentPlayer: number, players: Player[]) => {
+  currentPlayer += 1;
+  if (currentPlayer == players.length) currentPlayer = 0;
+  return currentPlayer;
+};
 export const wasCorrectlyAnswered = (
   players: Player[],
   currentPlayer: number,
@@ -90,13 +93,9 @@ export const wasCorrectlyAnswered = (
         console.log(player.name + " now 1has " + player.gold + " Gold Coins.");
 
         var winner = didPlayerWin(player, maxGold);
-        currentPlayer += 1;
-        if (currentPlayer == players.length) currentPlayer = 0;
 
         return winner;
       } else {
-        currentPlayer += 1;
-        if (currentPlayer == players.length) currentPlayer = 0;
         return true;
       }
     } else {
