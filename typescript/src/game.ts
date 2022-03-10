@@ -8,7 +8,7 @@ export class Game {
     public maxGold: number;
     public questions: Questions;
 	public leaderboard: Player[];
-	public RageQuitBoard: Player[];
+	public rageQuitBoard: Player[];
 
     constructor(playerNames: string[], maxGold: number) {
         this.players = initPlayers(playerNames);
@@ -16,6 +16,7 @@ export class Game {
         this.questions = { pop: [], science: [], rock: [], sports: [], techno: [] };
         this.isRock = askRockType();
 		this.leaderboard = [];
+		this.rageQuitBoard = [];
         for (let i = 0; i < 50; i++) {
             this.questions.pop.push("Pop Question " + i);
             this.questions.science.push("Science Question " + i);

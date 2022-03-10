@@ -151,7 +151,7 @@ export const askRockType = () => {
   }
 };
 
-export const askAction = (player: Player) => {
+export const askAction = (player: Player, rageQuitBoard: Player[]) => {
   let askPrompt: string = readline.question(
     "Choisissez votre action ? : \
     1- Répondre à la question \
@@ -170,6 +170,8 @@ export const askAction = (player: Player) => {
     }
   } else if (askPrompt === "3") {
     console.log("You are out !");
+    player.hasQuit = true;
+    rageQuitBoard.push(player);
   } else {
     console.log("Invalid answer, You'll answer to this question");
     return 0;
@@ -188,7 +190,8 @@ export const roll = (
   currentPlayer: number,
   questions: Questions,
   isRock: boolean,
-  roll: number
+  roll: number,
+  rageQuitBoard: Player[]
 ) => {
   const player = players[currentPlayer];
   console.log(player.name + " is the current player");
@@ -210,7 +213,7 @@ export const roll = (
 
     console.log(player.name + "'s new location is " + player.place);
     console.log("The category is " + currentCategory(player, isRock));
-    if (askAction(player) == 2) {
+    if (askAction(player, rageQuitBoard) == 2) {
       player.jokers--;
       return 2;
     }
