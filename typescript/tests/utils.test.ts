@@ -4,7 +4,7 @@ import { Player } from "../src/types";
 import { currentCategory } from "../src/utils";
 
 describe("The test environment", () => {
-  it("a", async () => {
+  it("Generate category samples", async () => {
     let results = [
       { pop: 0, science: 0, sports: 0, rock: 0 },
       { pop: 0, science: 0, sports: 0, rock: 0 },
