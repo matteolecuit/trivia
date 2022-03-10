@@ -21,6 +21,7 @@ describe("The test environment", () => {
         jokers: 0,
         name: "0",
         streak: 0,
+        designedCategory: "",
       },
       {
         place: 0,
@@ -31,6 +32,7 @@ describe("The test environment", () => {
         jokers: 0,
         name: "1",
         streak: 0,
+        designedCategory: "",
       },
       {
         place: 0,
@@ -41,6 +43,7 @@ describe("The test environment", () => {
         jokers: 0,
         name: "2",
         streak: 0,
+        designedCategory: "",
       },
     ];
 
@@ -48,7 +51,7 @@ describe("The test environment", () => {
       for (const player of players) {
         console.log(i);
         player.place = Math.floor(Math.random() * 12) + 1;
-        const category = currentCategory(player, true);
+        const category = currentCategory(player, true, "");
         console.log(category);
         results[Number(player.name)][category] += 1;
       }
