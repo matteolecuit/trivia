@@ -190,7 +190,6 @@ export const roll = (
       if (roll % 2 != 0) {
         player.isGettingOutOfPenaltyBox = true;
 
-        console.log(player.name + " is getting out of the penalty box");
         player.place = player.place + roll;
         if (player.place > 11) {
           player.place = player.place - 12;
