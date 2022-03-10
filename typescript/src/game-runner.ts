@@ -36,7 +36,7 @@ export class GameRunner {
             );
 
             if (action == 0) {
-                if (Math.floor(Math.random() * 2) == 1) {
+                if (Math.floor(Math.random() * 3) == 1) {
                     wrongAnswer(game.players, game.currentPlayer);
                 } else {
                     let winner = wasCorrectlyAnswered(
