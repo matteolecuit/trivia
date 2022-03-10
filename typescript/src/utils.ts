@@ -1,5 +1,6 @@
 import { Category, Player, Questions } from "./types";
 import * as readline from "readline-sync";
+import { categories } from '../enums/categories.enum';
 
 export const initPlayers = (playerNames: string[]) => {
   let playerCount = 0;
@@ -14,6 +15,7 @@ export const initPlayers = (playerNames: string[]) => {
       isInPenaltyBox: false,
       isGettingOutOfPenaltyBox: false,
       hasQuit: false,
+      designedCategory: ""
     };
   });
   return players;
@@ -44,7 +46,14 @@ export const askQuestion = (
   isRock: boolean
 ) => {
   if (!player.hasQuit) {
-    const category = currentCategory(player, isRock);
+    let category = "";
+    if (player.designedCategory.length > 0) {
+      console.log(`${player.name} 's category has been designed and will be ${player.designedCategory}`)
+      category = player.designedCategory;
+      player.designedCategory = ""
+    } else {
+      category = currentCategory(player, isRock);
+    }
     const availableQuestions = questions[category] as string[];
     console.log(availableQuestions.shift());
   }
@@ -55,9 +64,13 @@ export const wrongAnswer = (players: Player[], currentPlayer: number) => {
   console.log("Question was incorrectly answered");
   console.log(player.name + " was sent to the penalty box");
   player.isInPenaltyBox = true;
+  let designedCategory = askCategory(player);
 
   currentPlayer += 1;
   if (currentPlayer == players.length) currentPlayer = 0;
+
+  players[currentPlayer].designedCategory = designedCategory;
+
   return { players, currentPlayer };
 };
 
@@ -152,6 +165,27 @@ export const askAction = (player: Player) => {
     console.log("Invalid answer, You'll answer to this question");
     return 0;
   }
+};
+
+export const askCategory = (player: Player) => {
+  let isValid = false;
+  let askPrompt = "";
+  let validCategories: string[] = Object.values(categories);
+
+  do {
+    console.log(validCategories);
+    askPrompt = readline.question(
+      "Which category would you like to give to next player ? : "
+    );
+
+    if (validCategories.includes(askPrompt)) {
+      isValid = true;
+    } else {
+      console.log("Please choose a valid category")
+    }
+  } while (!isValid)
+
+  return askPrompt;
 };
 
 export const createRockQuestion = (index: number, isRock: boolean) => {

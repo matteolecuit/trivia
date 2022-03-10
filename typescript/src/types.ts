@@ -5,6 +5,7 @@ export interface Player {
   isInPenaltyBox: boolean;
   isGettingOutOfPenaltyBox: boolean;
   hasQuit: boolean;
+  designedCategory: string;
 }
 
 export type Questions = {
