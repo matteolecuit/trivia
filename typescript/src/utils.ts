@@ -19,7 +19,7 @@ export const initPlayers = (playerNames: string[]) => {
 };
 
 export const didPlayerWin = (player: Player) => {
-  return !(player.gold === 6);
+  return player.gold == 6;
 };
 
 export const currentCategory = (player: Player, isRock: boolean) => {
@@ -73,11 +73,11 @@ export const wasCorrectlyAnswered = (
       currentPlayer += 1;
       if (currentPlayer == players.length) currentPlayer = 0;
 
-      return winner;
+      return { winner, players, currentPlayer };
     } else {
       currentPlayer += 1;
       if (currentPlayer == players.length) currentPlayer = 0;
-      return true;
+      return { winner: true, players, currentPlayer };
     }
   } else {
     console.log("Answer was corrent!!!!");
@@ -86,11 +86,12 @@ export const wasCorrectlyAnswered = (
     console.log(player.name + " now 2has " + player.gold + " Gold Coins.");
 
     var winner = didPlayerWin(player);
+    console.log({ winner });
 
     currentPlayer += 1;
     if (currentPlayer == players.length) currentPlayer = 0;
 
-    return winner;
+    return { winner, players, currentPlayer };
   }
 };
 
@@ -122,4 +123,44 @@ export const createRockQuestion = (index: number, isRock: boolean) => {
   let type: string;
   type = isRock ? "Rock" : "Techno";
   return type + " Question " + index;
+};
+
+export const roll = (
+  players: Player[],
+  currentPlayer: number,
+  questions: Questions,
+  isRock: boolean,
+  roll: number
+) => {
+  const player = players[currentPlayer];
+  console.log(player.name + " is the current player");
+  console.log("They have rolled a " + roll);
+
+  if (player.isInPenaltyBox) {
+    if (roll % 2 != 0) {
+      player.isGettingOutOfPenaltyBox = true;
+
+      console.log(player.name + " is getting out of the penalty box");
+      player.place = player.place + roll;
+      if (player.place > 11) {
+        player.place = player.place - 12;
+      }
+
+      console.log(player.name + "'s new location is " + player.place);
+      console.log("The category is " + currentCategory(player, isRock));
+      askQuestion(player, questions, isRock);
+    } else {
+      console.log(player.name + " is not getting out of the penalty box");
+      player.isGettingOutOfPenaltyBox = false;
+    }
+  } else {
+    player.place = player.place + roll;
+    if (player.place > 11) {
+      player.place = player.place - 12;
+    }
+
+    console.log(player.name + "'s new location is " + player.place);
+    console.log("The category is " + currentCategory(player, isRock));
+    askQuestion(player, questions, isRock);
+  }
 };
