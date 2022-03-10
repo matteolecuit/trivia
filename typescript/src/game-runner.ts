@@ -11,7 +11,6 @@ export class GameRunner {
       return;
     }
     let gameHasEnded = false;
-    let notAWinner = true;
     do {
       const diceRoll = Math.floor(Math.random() * 6) + 1;
       let action = roll(
@@ -34,7 +33,7 @@ export class GameRunner {
           if (winner) gameHasEnded = true;
         }
       } else {
-        notAWinner = true;
+        gameHasEnded = false;
       }
     } while (!gameHasEnded);
   }
