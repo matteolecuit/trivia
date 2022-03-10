@@ -11,6 +11,7 @@ export const initPlayers = (playerNames: string[]) => {
       name: playerName,
       gold: 0,
       place: 0,
+      streak: 0,
       jokers: 1,
       isInPenaltyBox: false,
       isGettingOutOfPenaltyBox: false,
@@ -54,9 +55,11 @@ export const askQuestion = (
 export const wrongAnswer = (players: Player[], currentPlayer: number) => {
   const player = players[currentPlayer];
   console.log("Question was incorrectly answered");
+  console.log("Streak has been reset");
   console.log(player.name + " was sent to the penalty box");
   player.isInPenaltyBox = true;
 
+  player.streak = 0;
   currentPlayer += 1;
   if (currentPlayer == players.length) currentPlayer = 0;
   return { players, currentPlayer };
@@ -74,10 +77,12 @@ export const wasCorrectlyAnswered = (
         console.log("---------------------------");
         console.log(
           "Answer was correct!!!!" +
-          player.name +
-          " is leaving the penalty box."
+            player.name +
+            " is leaving the penalty box."
         );
-        player.gold += 1;
+        player.streak += 1;
+        player.gold += player.streak;
+
         console.log(player.name + " now 1has " + player.gold + " Gold Coins.");
 
         var winner = didPlayerWin(player, maxGold);
@@ -93,7 +98,9 @@ export const wasCorrectlyAnswered = (
     } else {
       console.log("Answer was correct!!!!");
 
-      player.gold += 1;
+      player.streak += 1;
+      player.gold += player.streak;
+
       console.log(player.name + " now 2has " + player.gold + " Gold Coins.");
 
       var winner = didPlayerWin(player, maxGold);
