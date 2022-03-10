@@ -96,7 +96,7 @@ export const wasCorrectlyAnswered = (
 
         return winner;
       } else {
-        return true;
+        return false;
       }
     } else {
       console.log("Answer was correct!!!!");
