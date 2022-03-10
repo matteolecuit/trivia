@@ -1,5 +1,5 @@
 import { Game } from "./game";
-import { checkPlayers, wrongAnswer } from "./utils";
+import { checkPlayers, roll, wasCorrectlyAnswered, wrongAnswer } from "./utils";
 
 export class GameRunner {
   public static main(): void {
@@ -10,16 +10,28 @@ export class GameRunner {
       console.error("Game should have more than 2 and less than 7 players");
       return;
     }
+<<<<<<< HEAD
+    let gameHasEnded = false;
+=======
     let notAWinner = true;
+>>>>>>> master
     do {
-      game.roll(Math.floor(Math.random() * 6) + 1);
+      const diceRoll = Math.floor(Math.random() * 6) + 1;
+      roll(
+        game.players,
+        game.currentPlayer,
+        game.questions,
+        game.isRock,
+        diceRoll
+      );
 
       if (Math.floor(Math.random() * 10) == 7) {
         wrongAnswer(game.players, game.currentPlayer);
       } else {
-        notAWinner = game.wasCorrectlyAnswered();
+        let winner = wasCorrectlyAnswered(game.players, game.currentPlayer);
+        if (winner) gameHasEnded = true;
       }
-    } while (notAWinner);
+    } while (!gameHasEnded);
   }
 }
 
