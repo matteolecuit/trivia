@@ -3,6 +3,7 @@ export interface Player {
   place: number;
   gold: number;
   isInPenaltyBox: boolean;
+  isGettingOutOfPenaltyBox: boolean;
 }
 
 export type Questions = {

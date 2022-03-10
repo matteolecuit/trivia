@@ -1,4 +1,5 @@
 import { Game } from "./game";
+import { wrongAnswer } from "./utils";
 
 export class GameRunner {
   public static main(): void {
@@ -9,7 +10,7 @@ export class GameRunner {
       game.roll(Math.floor(Math.random() * 6) + 1);
 
       if (Math.floor(Math.random() * 10) == 7) {
-        notAWinner = game.wrongAnswer();
+        wrongAnswer(game.players, game.currentPlayer);
       } else {
         notAWinner = game.wasCorrectlyAnswered();
       }

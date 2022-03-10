@@ -7,9 +7,8 @@ import {
 import { Player, Questions } from "./types";
 
 export class Game {
-  private players: Player[];
-  private currentPlayer: number = 0;
-  private isGettingOutOfPenaltyBox: boolean = false;
+  public players: Player[];
+  public currentPlayer: number = 0;
 
   private questions: Questions;
 
@@ -32,7 +31,7 @@ export class Game {
 
     if (this.players[this.currentPlayer].isInPenaltyBox) {
       if (roll % 2 != 0) {
-        this.isGettingOutOfPenaltyBox = true;
+        this.players[this.currentPlayer].isGettingOutOfPenaltyBox = true;
 
         console.log(
           this.players[this.currentPlayer].name +
@@ -59,7 +58,7 @@ export class Game {
           this.players[this.currentPlayer].name +
             " is not getting out of the penalty box"
         );
-        this.isGettingOutOfPenaltyBox = false;
+        this.players[this.currentPlayer].isGettingOutOfPenaltyBox = false;
       }
     } else {
       this.players[this.currentPlayer].place =
@@ -81,21 +80,9 @@ export class Game {
     }
   }
 
-  public wrongAnswer(): boolean {
-    console.log("Question was incorrectly answered");
-    console.log(
-      this.players[this.currentPlayer].name + " was sent to the penalty box"
-    );
-    this.players[this.currentPlayer].isInPenaltyBox = true;
-
-    this.currentPlayer += 1;
-    if (this.currentPlayer == this.players.length) this.currentPlayer = 0;
-    return true;
-  }
-
   public wasCorrectlyAnswered(): boolean {
     if (this.players[this.currentPlayer].isInPenaltyBox) {
-      if (this.isGettingOutOfPenaltyBox) {
+      if (this.players[this.currentPlayer].isGettingOutOfPenaltyBox) {
         console.log("Answer was correct!!!!");
         this.players[this.currentPlayer].gold += 1;
         console.log(
