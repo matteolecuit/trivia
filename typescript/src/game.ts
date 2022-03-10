@@ -47,7 +47,7 @@ export class Game {
         return "Rock Question " + index;
     }
 
-    public checkPlayers() {
+    public checkPlayers(): boolean {
         if (this.players.length >= 2 && this.players.length <= 6) {
             return true
         }
