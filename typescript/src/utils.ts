@@ -76,6 +76,10 @@ export const wasCorrectlyAnswered = (
             player.name +
             " is leaving the penalty box."
         );
+        
+        player.isInPenaltyBox = false;
+        player.isGettingOutOfPenaltyBox = false;
+
         player.gold += 1;
         console.log(player.name + " now 1has " + player.gold + " Gold Coins.");
 
