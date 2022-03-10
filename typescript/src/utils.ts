@@ -48,6 +48,10 @@ export const askQuestion = (
   if (!player.hasQuit) {
     const category = currentCategory(player, isRock);
     const availableQuestions = questions[category] as string[];
+    if (availableQuestions.length <= 0) {
+      generateQuestions
+        (questions, 10, isRock);
+    }
     console.log(availableQuestions.shift());
   }
 };
@@ -84,11 +88,11 @@ export const wasCorrectlyAnswered = (
 
       console.log(
         "🔥" +
-          player.name +
-          " now 2has " +
-          player.gold +
-          " Gold Coins and has a streak of " +
-          player.streak
+        player.name +
+        " now 2has " +
+        player.gold +
+        " Gold Coins and has a streak of " +
+        player.streak
       );
 
       var winner = didPlayerWin(player, maxGold);
@@ -201,4 +205,16 @@ export const move = (player: Player, roll: number) => {
   }
   console.log(player.name + "'s new location is " + player.place);
   return player.place;
+}
+
+export const generateQuestions = (questions: Questions, amount: number, isRock: boolean) => {
+  console.log("🃏 Generating " + amount + " cards...");
+  for (let i = 0; i < amount; i++) {
+    questions.pop.push("Pop Question " + i);
+    questions.science.push("Science Question " + i);
+    questions.sports.push("Sports Question " + i);
+    if (isRock) questions.rock.push("Rock Question " + i);
+    else questions.techno.push("Rock Question " + i);
+  }
+  return questions;
 }
