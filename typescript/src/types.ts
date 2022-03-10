@@ -2,6 +2,8 @@ export interface Player {
   name: string;
   place: number;
   gold: number;
+  streak: number;
+  jokers: number;
   isInPenaltyBox: boolean;
   isGettingOutOfPenaltyBox: boolean;
   hasQuit: boolean;
