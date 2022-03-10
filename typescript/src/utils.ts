@@ -55,11 +55,13 @@ export const askQuestion = (
 export const wrongAnswer = (players: Player[], currentPlayer: number) => {
   const player = players[currentPlayer];
   console.log("Question was incorrectly answered");
-  console.log("Streak has been reset");
   console.log(player.name + " was sent to the penalty box");
   player.isInPenaltyBox = true;
 
   player.streak = 0;
+  console.log(
+    "🍦Streak has been reset for " + player.name + " streak: " + player.streak
+  );
   currentPlayer += 1;
 };
 
