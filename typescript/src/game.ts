@@ -1,6 +1,7 @@
 import {
   askQuestion,
   askRockType,
+  askAction,
   currentCategory,
   didPlayerWin,
   initPlayers,
@@ -57,6 +58,7 @@ export class Game {
           "The category is " +
             currentCategory(this.players[this.currentPlayer], this.isRock)
         );
+		askAction();
         askQuestion(
           this.players[this.currentPlayer],
           this.questions,
@@ -86,6 +88,7 @@ export class Game {
         "The category is " +
           currentCategory(this.players[this.currentPlayer], this.isRock)
       );
+	  askAction();
       askQuestion(
         this.players[this.currentPlayer],
         this.questions,
