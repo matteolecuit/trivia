@@ -1,10 +1,10 @@
-interface Player {
-  name: string;
-  place: number;
-  gold: number;
-  isInPenaltyBox: boolean;
-  isGettingOutOfPenaltyBox: boolean;
-}
+import {
+  askQuestion,
+  currentCategory,
+  didPlayerWin,
+  howManyPlayers,
+} from "./utils";
+import { Player, Questions } from "./types";
 
 export const initPlayers = (playerNames: string[]) => {
   const players: Player[] = playerNames.map((playerName) => {
@@ -28,6 +28,7 @@ export class Game {
   private currentPlayer: number = 0;
   private isGettingOutOfPenaltyBox: boolean = false;
 
+  private nquestions: Questions;
   private popQuestions: Array<string> = [];
   private scienceQuestions: Array<string> = [];
   private sportsQuestions: Array<string> = [];
@@ -36,10 +37,10 @@ export class Game {
   constructor(playerNames: string[]) {
     this.nplayers = initPlayers(playerNames);
     for (let i = 0; i < 50; i++) {
-      this.popQuestions.push("Pop Question " + i);
-      this.scienceQuestions.push("Science Question " + i);
-      this.sportsQuestions.push("Sports Question " + i);
-      this.rockQuestions.push(this.createRockQuestion(i));
+      this.nquestions.pop.push("Pop Question " + i);
+      this.nquestions.science.push("Science Question " + i);
+      this.nquestions.sports.push("Sports Question " + i);
+      this.nquestions.rock.push(this.createRockQuestion(i));
     }
   }
 
@@ -49,18 +50,14 @@ export class Game {
 
   public add(name: string): boolean {
     this.players.push(name);
-    this.places[this.howManyPlayers()] = 0;
-    this.purses[this.howManyPlayers()] = 0;
-    this.inPenaltyBox[this.howManyPlayers()] = false;
+    this.places[howManyPlayers(this.nplayers)] = 0;
+    this.purses[howManyPlayers(this.nplayers)] = 0;
+    this.inPenaltyBox[howManyPlayers(this.nplayers)] = false;
 
     console.log(name + " was added");
     console.log("They are player number " + this.players.length);
 
     return true;
-  }
-
-  private howManyPlayers(): number {
-    return this.players.length;
   }
 
   public roll(roll: number) {
@@ -87,8 +84,11 @@ export class Game {
             "'s new location is " +
             this.places[this.currentPlayer]
         );
-        console.log("The category is " + this.currentCategory());
-        this.askQuestion();
+        console.log(
+          "The category is " +
+            currentCategory(this.nplayers[this.currentPlayer])
+        );
+        askQuestion(this.nplayers[this.currentPlayer], this.nquestions);
       } else {
         console.log(
           this.players[this.currentPlayer] +
@@ -107,36 +107,11 @@ export class Game {
           "'s new location is " +
           this.places[this.currentPlayer]
       );
-      console.log("The category is " + this.currentCategory());
-      this.askQuestion();
+      console.log(
+        "The category is " + currentCategory(this.nplayers[this.currentPlayer])
+      );
+      askQuestion(this.nplayers[this.currentPlayer], this.nquestions);
     }
-  }
-
-  private askQuestion(): void {
-    if (this.currentCategory() == "Pop") console.log(this.popQuestions.shift());
-    if (this.currentCategory() == "Science")
-      console.log(this.scienceQuestions.shift());
-    if (this.currentCategory() == "Sports")
-      console.log(this.sportsQuestions.shift());
-    if (this.currentCategory() == "Rock")
-      console.log(this.rockQuestions.shift());
-  }
-
-  private currentCategory(): string {
-    if (this.places[this.currentPlayer] == 0) return "Pop";
-    if (this.places[this.currentPlayer] == 4) return "Pop";
-    if (this.places[this.currentPlayer] == 8) return "Pop";
-    if (this.places[this.currentPlayer] == 1) return "Science";
-    if (this.places[this.currentPlayer] == 5) return "Science";
-    if (this.places[this.currentPlayer] == 9) return "Science";
-    if (this.places[this.currentPlayer] == 2) return "Sports";
-    if (this.places[this.currentPlayer] == 6) return "Sports";
-    if (this.places[this.currentPlayer] == 10) return "Sports";
-    return "Rock";
-  }
-
-  private didPlayerWin(): boolean {
-    return !(this.purses[this.currentPlayer] == 6);
   }
 
   public wrongAnswer(): boolean {
@@ -163,7 +138,7 @@ export class Game {
             " Gold Coins."
         );
 
-        var winner = this.didPlayerWin();
+        var winner = didPlayerWin(this.nplayers[this.currentPlayer]);
         this.currentPlayer += 1;
         if (this.currentPlayer == this.players.length) this.currentPlayer = 0;
 
@@ -184,7 +159,7 @@ export class Game {
           " Gold Coins."
       );
 
-      var winner = this.didPlayerWin();
+      var winner = didPlayerWin(this.nplayers[this.currentPlayer]);
 
       this.currentPlayer += 1;
       if (this.currentPlayer == this.players.length) this.currentPlayer = 0;
