@@ -1,4 +1,4 @@
-import { askRockType, generateCards, initPlayers } from "./utils";
+import { askRockType, generateCards, generateQuestions, initPlayers } from "./utils";
 import { Player, Questions } from "./types";
 
 export class Game {
@@ -13,7 +13,7 @@ export class Game {
         this.maxGold = maxGold;
         this.questions = { pop: [], science: [], rock: [], sports: [], techno: [] };
         this.isRock = askRockType();
-        generateCards(this.questions, 2, this.isRock);
+        generateQuestions(this.questions, 2, this.isRock);
         /*for (let i = 0; i < 50; i++) {
             this.questions.pop.push("Pop Question " + i);
             this.questions.science.push("Science Question " + i);
