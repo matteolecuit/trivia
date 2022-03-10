@@ -1,4 +1,4 @@
-import { askRockType, generateCards, generateQuestions, initPlayers } from "./utils";
+import { askRockType, generateQuestions, initPlayers } from "./utils";
 import { Player, Questions } from "./types";
 
 export class Game {
