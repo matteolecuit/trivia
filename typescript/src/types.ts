@@ -5,6 +5,7 @@ export interface Player {
   jokers: number;
   isInPenaltyBox: boolean;
   isGettingOutOfPenaltyBox: boolean;
+  hasQuit: boolean;
 }
 
 export type Questions = {

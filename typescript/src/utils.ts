@@ -14,13 +14,14 @@ export const initPlayers = (playerNames: string[]) => {
       jokers: 1,
       isInPenaltyBox: false,
       isGettingOutOfPenaltyBox: false,
+      hasQuit: false,
     };
   });
   return players;
 };
 
 export const didPlayerWin = (player: Player) => {
-  return !(player.gold === 6);
+  return player.gold == 6;
 };
 
 export const currentCategory = (player: Player, isRock: boolean) => {
@@ -38,10 +39,16 @@ export const currentCategory = (player: Player, isRock: boolean) => {
   if (category == "rock" && !isRock) category = "techno";
   return category;
 };
-export const askQuestion = (player: Player, questions: Questions, isRock: boolean) => {
-  const category = currentCategory(player, isRock);
-  const availableQuestions = questions[category] as string[];
-  console.log(availableQuestions.shift());
+export const askQuestion = (
+  player: Player,
+  questions: Questions,
+  isRock: boolean
+) => {
+  if (!player.hasQuit) {
+    const category = currentCategory(player, isRock);
+    const availableQuestions = questions[category] as string[];
+    console.log(availableQuestions.shift());
+  }
 };
 
 export const wrongAnswer = (players: Player[], currentPlayer: number) => {
@@ -55,36 +62,48 @@ export const wrongAnswer = (players: Player[], currentPlayer: number) => {
   return { players, currentPlayer };
 };
 
-export const wasCorrectlyAnswered = (players: Player[], currentPlayer: number) => {
+export const wasCorrectlyAnswered = (
+  players: Player[],
+  currentPlayer: number
+) => {
   const player = players[currentPlayer];
-  if (player.isInPenaltyBox) {
-    if (player.isGettingOutOfPenaltyBox) {
+  if (!player.hasQuit) {
+    if (player.isInPenaltyBox) {
+      if (player.isGettingOutOfPenaltyBox) {
+        console.log("---------------------------");
+        console.log(
+          "Answer was correct!!!!" +
+            player.name +
+            " is leaving the penalty box."
+        );
+        player.gold += 1;
+        console.log(player.name + " now 1has " + player.gold + " Gold Coins.");
+
+        var winner = didPlayerWin(player);
+        currentPlayer += 1;
+        if (currentPlayer == players.length) currentPlayer = 0;
+
+        return winner;
+      } else {
+        currentPlayer += 1;
+        if (currentPlayer == players.length) currentPlayer = 0;
+        return true;
+      }
+    } else {
       console.log("Answer was correct!!!!");
+
       player.gold += 1;
-      console.log(player.name + " now 1has " + player.gold + " Gold Coins.");
+      console.log(player.name + " now 2has " + player.gold + " Gold Coins.");
 
       var winner = didPlayerWin(player);
+
       currentPlayer += 1;
       if (currentPlayer == players.length) currentPlayer = 0;
 
       return winner;
-    } else {
-      currentPlayer += 1;
-      if (currentPlayer == players.length) currentPlayer = 0;
-      return true;
     }
   } else {
-    console.log("Answer was corrent!!!!");
-
-    player.gold += 1;
-    console.log(player.name + " now 2has " + player.gold + " Gold Coins.");
-
-    var winner = didPlayerWin(player);
-
-    currentPlayer += 1;
-    if (currentPlayer == players.length) currentPlayer = 0;
-
-    return winner;
+    return false;
   }
 };
 
@@ -96,7 +115,9 @@ export const checkPlayers = (players: Player[]) => {
 };
 
 export const askRockType = () => {
-  let rockPrompt: string = readline.question("Tu veux du rock mon copain ? (Y/N) : ");
+  let rockPrompt: string = readline.question(
+    "Tu veux du rock mon copain ? (Y/N) : "
+  );
 
   if (rockPrompt.toLowerCase() === "y") {
     console.log("You choose Rock");
@@ -110,7 +131,7 @@ export const askRockType = () => {
   }
 };
 
-export const askAction = (player: Player): number => {
+export const askAction = (player: Player) => {
   let askPrompt: string = readline.question(
     "Choisissez votre action ? : \
     1- Répondre à la question \
@@ -140,4 +161,55 @@ export const createRockQuestion = (index: number, isRock: boolean) => {
   let type: string;
   type = isRock ? "Rock" : "Techno";
   return type + " Question " + index;
+};
+
+export const roll = (
+  players: Player[],
+  currentPlayer: number,
+  questions: Questions,
+  isRock: boolean,
+  roll: number
+) => {
+  const player = players[currentPlayer];
+  console.log(player.name + " is the current player");
+  console.log("They have rolled a " + roll);
+
+  if (!player.hasQuit) {
+    if (player.isInPenaltyBox) {
+      if (roll % 2 != 0) {
+        player.isGettingOutOfPenaltyBox = true;
+
+        console.log(player.name + " is getting out of the penalty box");
+        player.place = player.place + roll;
+        if (player.place > 11) {
+          player.place = player.place - 12;
+        }
+
+        console.log(player.name + "'s new location is " + player.place);
+        console.log("The category is " + currentCategory(player, isRock));
+        if (askAction(player) == 2) {
+          player.jokers--;
+          return 2;
+        }
+
+        askQuestion(player, questions, isRock);
+      } else {
+        console.log(player.name + " is not getting out of the penalty box");
+        player.isGettingOutOfPenaltyBox = false;
+      }
+    } else {
+      player.place = player.place + roll;
+      if (player.place > 11) {
+        player.place = player.place - 12;
+      }
+
+      console.log(player.name + "'s new location is " + player.place);
+      console.log("The category is " + currentCategory(player, isRock));
+      if (askAction(player) == 2) {
+        player.jokers--;
+        return 2;
+      }
+      askQuestion(player, questions, isRock);
+    }
+  }
 };
