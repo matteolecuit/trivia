@@ -198,37 +198,32 @@ export const roll = (
     if (player.isInPenaltyBox) {
       if (roll % 2 != 0) {
         player.isGettingOutOfPenaltyBox = true;
+        console.log(player.name + " is getting out of the penalty box");
 
-        player.place = player.place + roll;
-        if (player.place > 11) {
-          player.place = player.place - 12;
-        }
-
-        console.log(player.name + "'s new location is " + player.place);
-        console.log("The category is " + currentCategory(player, isRock));
-        if (askAction(player) == 2) {
-          player.jokers--;
-          return 2;
-        }
-
-        askQuestion(player, questions, isRock);
       } else {
         console.log(player.name + " is not getting out of the penalty box");
         player.isGettingOutOfPenaltyBox = false;
+        return 0;
       }
-    } else {
-      player.place = player.place + roll;
-      if (player.place > 11) {
-        player.place = player.place - 12;
-      }
-
-      console.log(player.name + "'s new location is " + player.place);
-      console.log("The category is " + currentCategory(player, isRock));
-      if (askAction(player) == 2) {
-        player.jokers--;
-        return 2;
-      }
-      askQuestion(player, questions, isRock);
     }
+    player.place = move(player, roll);
+
+    console.log(player.name + "'s new location is " + player.place);
+    console.log("The category is " + currentCategory(player, isRock));
+    if (askAction(player) == 2) {
+      player.jokers--;
+      return 2;
+    }
+
+    askQuestion(player, questions, isRock);
+
   }
 };
+
+export const move = (player: Player, roll: number) => {
+  player.place = player.place + roll;
+  if (player.place > 11) {
+    player.place = player.place - 12;
+  }
+  return player.place;
+}
