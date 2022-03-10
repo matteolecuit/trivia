@@ -10,24 +10,27 @@ export class GameRunner {
       console.error("Game should have more than 2 and less than 7 players");
       return;
     }
-    let gameHasEnded = false;
+    let notAWinner;
     do {
       const diceRoll = Math.floor(Math.random() * 6) + 1;
-      roll(
+      let action = roll(
         game.players,
         game.currentPlayer,
         game.questions,
         game.isRock,
         diceRoll
       );
-
-      if (Math.floor(Math.random() * 10) == 7) {
-        wrongAnswer(game.players, game.currentPlayer);
+      console.log(action);
+      if (action != 2) {
+        if (Math.floor(Math.random() * 10) == 7) {
+          wrongAnswer(game.players, game.currentPlayer);
+        } else {
+          notAWinner = wasCorrectlyAnswered(game.players, game.currentPlayer);
+        }
       } else {
-        let winner = wasCorrectlyAnswered(game.players, game.currentPlayer);
-        if (winner) gameHasEnded = true;
+        notAWinner = true;
       }
-    } while (!gameHasEnded);
+    } while (notAWinner);
   }
 }
 
