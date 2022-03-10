@@ -20,8 +20,8 @@ export const initPlayers = (playerNames: string[]) => {
   return players;
 };
 
-export const didPlayerWin = (player: Player) => {
-  return player.gold == 6;
+export const didPlayerWin = (player: Player, maxGold: number) => {
+  return player.gold >= maxGold;
 };
 
 export const currentCategory = (player: Player, isRock: boolean) => {
@@ -64,7 +64,8 @@ export const wrongAnswer = (players: Player[], currentPlayer: number) => {
 
 export const wasCorrectlyAnswered = (
   players: Player[],
-  currentPlayer: number
+  currentPlayer: number,
+  maxGold: number
 ) => {
   const player = players[currentPlayer];
   if (!player.hasQuit) {
@@ -73,13 +74,13 @@ export const wasCorrectlyAnswered = (
         console.log("---------------------------");
         console.log(
           "Answer was correct!!!!" +
-            player.name +
-            " is leaving the penalty box."
+          player.name +
+          " is leaving the penalty box."
         );
         player.gold += 1;
         console.log(player.name + " now 1has " + player.gold + " Gold Coins.");
 
-        var winner = didPlayerWin(player);
+        var winner = didPlayerWin(player, maxGold);
         currentPlayer += 1;
         if (currentPlayer == players.length) currentPlayer = 0;
 
@@ -95,7 +96,7 @@ export const wasCorrectlyAnswered = (
       player.gold += 1;
       console.log(player.name + " now 2has " + player.gold + " Gold Coins.");
 
-      var winner = didPlayerWin(player);
+      var winner = didPlayerWin(player, maxGold);
 
       currentPlayer += 1;
       if (currentPlayer == players.length) currentPlayer = 0;
