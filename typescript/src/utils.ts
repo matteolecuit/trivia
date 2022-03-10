@@ -13,7 +13,6 @@ export const initPlayers = (playerNames: string[]) => {
       place: 0,
       streak: 0,
       jokers: 1,
-      streak: 0,
       isInPenaltyBox: false,
       isGettingOutOfPenaltyBox: false,
       hasQuit: false,
@@ -68,7 +67,7 @@ export const switchPlayer = (currentPlayer: number, players: Player[]) => {
   currentPlayer += 1;
   if (currentPlayer == players.length) currentPlayer = 0;
   return currentPlayer;
-}
+};
 export const wasCorrectlyAnswered = (
   players: Player[],
   currentPlayer: number,
