@@ -44,7 +44,11 @@ export class GameRunner {
                         game.currentPlayer,
                         game.maxGold
                     );
-                    if (winner) gameHasEnded = true;
+                    if (winner) {
+                        game.leaderboard.push(game.players[game.currentPlayer]);
+                        game.players[game.currentPlayer].hasQuit = true;
+                    } 
+                    if (game.leaderboard.length === game.players.length) gameHasEnded = true;
                 }
             } else {
                 console.log(
@@ -53,6 +57,11 @@ export class GameRunner {
             }
             game.currentPlayer = switchPlayer(game.currentPlayer, game.players);
         } while (!gameHasEnded);
+        let i = 1;
+        game.leaderboard.forEach(element => {
+            console.log(i + " - " + element.name + " \ ");
+            i++;
+        })
     }
 }
 

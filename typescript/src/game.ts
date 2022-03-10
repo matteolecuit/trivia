@@ -7,12 +7,15 @@ export class Game {
     public isRock: boolean;
     public maxGold: number;
     public questions: Questions;
+	public leaderboard: Player[];
+	public RageQuitBoard: Player[];
 
     constructor(playerNames: string[], maxGold: number) {
         this.players = initPlayers(playerNames);
         this.maxGold = maxGold;
         this.questions = { pop: [], science: [], rock: [], sports: [], techno: [] };
         this.isRock = askRockType();
+		this.leaderboard = [];
         for (let i = 0; i < 50; i++) {
             this.questions.pop.push("Pop Question " + i);
             this.questions.science.push("Science Question " + i);
