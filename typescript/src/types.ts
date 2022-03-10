@@ -5,8 +5,8 @@ export interface Player {
   streak: number;
   jokers: number;
   isInPenaltyBox: boolean;
-  isGettingOutOfPenaltyBox: boolean;
   hasQuit: boolean;
+  prison: number;
 }
 
 export type Questions = {
