@@ -1,3 +1,5 @@
+import * as readline from "readline-sync";
+
 interface Player {
   name: string;
   place: number;
@@ -20,6 +22,7 @@ export const initPlayers = (playerNames: string[]) => {
 };
 
 export class Game {
+  private isRock: boolean;
   private nplayers: Player[];
   private players: Array<string> = [];
   private places: Array<number> = [];
@@ -35,16 +38,39 @@ export class Game {
 
   constructor(playerNames: string[]) {
     this.nplayers = initPlayers(playerNames);
+
+    this.askRockType();
+
     for (let i = 0; i < 50; i++) {
       this.popQuestions.push("Pop Question " + i);
       this.scienceQuestions.push("Science Question " + i);
       this.sportsQuestions.push("Sports Question " + i);
-      this.rockQuestions.push(this.createRockQuestion(i));
+      this.rockQuestions.push(this.createRockQuestion(i, this.isRock));
     }
   }
 
-  private createRockQuestion(index: number): string {
-    return "Rock Question " + index;
+  private async askRockType() {
+    let rockPrompt: string = readline.question('Tu veux du rock mon copain ? (Y/N) : ');
+
+    if (rockPrompt.toLowerCase() === 'y') {
+      this.isRock = true;
+      console.log("You choose Rock")
+    } else if (rockPrompt.toLowerCase() === 'n') {
+      this.isRock = false;
+      console.log("You'll have Techno questions")
+    } else {
+      this.isRock = false;
+      console.log("Invalid answer, You'll have Techno questions")
+    }
+  } 
+  
+
+  private createRockQuestion(index: number, isRock: boolean): string {
+    if (isRock) {
+      return "Rock Question " + index;
+    } else {
+      return "TECHNO Question " + index;
+    }
   }
 
   public add(name: string): boolean {
