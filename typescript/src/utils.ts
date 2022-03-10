@@ -13,6 +13,7 @@ export const initPlayers = (playerNames: string[]) => {
       place: 0,
       isInPenaltyBox: false,
       isGettingOutOfPenaltyBox: false,
+      hasQuit: false,
     };
   });
   return players;
@@ -42,9 +43,11 @@ export const askQuestion = (
   questions: Questions,
   isRock: boolean
 ) => {
-  const category = currentCategory(player, isRock);
-  const availableQuestions = questions[category] as string[];
-  console.log(availableQuestions.shift());
+  if (!player.hasQuit) {
+    const category = currentCategory(player, isRock);
+    const availableQuestions = questions[category] as string[];
+    console.log(availableQuestions.shift());
+  }
 };
 
 export const wrongAnswer = (players: Player[], currentPlayer: number) => {
@@ -63,34 +66,43 @@ export const wasCorrectlyAnswered = (
   currentPlayer: number
 ) => {
   const player = players[currentPlayer];
-  if (player.isInPenaltyBox) {
-    if (player.isGettingOutOfPenaltyBox) {
+  if (!player.hasQuit) {
+    if (player.isInPenaltyBox) {
+      if (player.isGettingOutOfPenaltyBox) {
+        console.log("---------------------------");
+        console.log(
+          "Answer was correct!!!!" +
+            player.name +
+            " is leaving the penalty box."
+        );
+        player.gold += 1;
+        console.log(player.name + " now 1has " + player.gold + " Gold Coins.");
+
+        var winner = didPlayerWin(player);
+        currentPlayer += 1;
+        if (currentPlayer == players.length) currentPlayer = 0;
+
+        return winner;
+      } else {
+        currentPlayer += 1;
+        if (currentPlayer == players.length) currentPlayer = 0;
+        return true;
+      }
+    } else {
       console.log("Answer was correct!!!!");
+
       player.gold += 1;
-      console.log(player.name + " now 1has " + player.gold + " Gold Coins.");
+      console.log(player.name + " now 2has " + player.gold + " Gold Coins.");
 
       var winner = didPlayerWin(player);
+
       currentPlayer += 1;
       if (currentPlayer == players.length) currentPlayer = 0;
 
-      return { winner, players, currentPlayer };
-    } else {
-      currentPlayer += 1;
-      if (currentPlayer == players.length) currentPlayer = 0;
-      return { winner: true, players, currentPlayer };
+      return winner;
     }
   } else {
-    console.log("Answer was corrent!!!!");
-
-    player.gold += 1;
-    console.log(player.name + " now 2has " + player.gold + " Gold Coins.");
-
-    var winner = didPlayerWin(player);
-
-    currentPlayer += 1;
-    if (currentPlayer == players.length) currentPlayer = 0;
-
-    return { winner, players, currentPlayer };
+    return false;
   }
 };
 
@@ -118,7 +130,7 @@ export const askRockType = () => {
   }
 };
 
-export const askAction = () => {
+export const askAction = (player: Player) => {
   let askPrompt: string = readline.question(
     "Choisissez votre action ? : \
     1- Répondre à la question \
@@ -134,6 +146,7 @@ export const askAction = () => {
     return 2;
   } else if (askPrompt === "3") {
     console.log("You are out !");
+    player.hasQuit = true;
     return 3;
   } else {
     console.log("Invalid answer, You'll answer to this question");
@@ -158,11 +171,26 @@ export const roll = (
   console.log(player.name + " is the current player");
   console.log("They have rolled a " + roll);
 
-  if (player.isInPenaltyBox) {
-    if (roll % 2 != 0) {
-      player.isGettingOutOfPenaltyBox = true;
+  if (!player.hasQuit) {
+    if (player.isInPenaltyBox) {
+      if (roll % 2 != 0) {
+        player.isGettingOutOfPenaltyBox = true;
 
-      console.log(player.name + " is getting out of the penalty box");
+        console.log(player.name + " is getting out of the penalty box");
+        player.place = player.place + roll;
+        if (player.place > 11) {
+          player.place = player.place - 12;
+        }
+
+        console.log(player.name + "'s new location is " + player.place);
+        console.log("The category is " + currentCategory(player, isRock));
+        askAction(player);
+        askQuestion(player, questions, isRock);
+      } else {
+        console.log(player.name + " is not getting out of the penalty box");
+        player.isGettingOutOfPenaltyBox = false;
+      }
+    } else {
       player.place = player.place + roll;
       if (player.place > 11) {
         player.place = player.place - 12;
@@ -170,19 +198,8 @@ export const roll = (
 
       console.log(player.name + "'s new location is " + player.place);
       console.log("The category is " + currentCategory(player, isRock));
+      askAction(player);
       askQuestion(player, questions, isRock);
-    } else {
-      console.log(player.name + " is not getting out of the penalty box");
-      player.isGettingOutOfPenaltyBox = false;
     }
-  } else {
-    player.place = player.place + roll;
-    if (player.place > 11) {
-      player.place = player.place - 12;
-    }
-
-    console.log(player.name + "'s new location is " + player.place);
-    console.log("The category is " + currentCategory(player, isRock));
-    askQuestion(player, questions, isRock);
   }
 };

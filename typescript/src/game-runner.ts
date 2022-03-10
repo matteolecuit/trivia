@@ -24,13 +24,7 @@ export class GameRunner {
       if (Math.floor(Math.random() * 10) == 7) {
         wrongAnswer(game.players, game.currentPlayer);
       } else {
-        let {
-          winner,
-          players: updatedPlayers,
-          currentPlayer: updatedCurrentPlayer,
-        } = wasCorrectlyAnswered(game.players, game.currentPlayer);
-        game.players = updatedPlayers;
-        game.currentPlayer = updatedCurrentPlayer;
+        let winner = wasCorrectlyAnswered(game.players, game.currentPlayer);
         if (winner) gameHasEnded = true;
       }
     } while (!gameHasEnded);
