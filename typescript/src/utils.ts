@@ -1,7 +1,19 @@
 import { Category, Player, Questions } from "./types";
 
-export const howManyPlayers = (players: Player[]) => {
-  return players.length;
+export const initPlayers = (playerNames: string[]) => {
+  let playerCount = 0;
+  const players: Player[] = playerNames.map((playerName) => {
+    playerCount += 1;
+    console.log(playerName + " was added");
+    console.log("They are " + playerCount + " players");
+    return {
+      name: playerName,
+      gold: 0,
+      place: 0,
+      isInPenaltyBox: false,
+    };
+  });
+  return players;
 };
 
 export const didPlayerWin = (player: Player) => {
