@@ -97,11 +97,14 @@ export class Game {
   public wasCorrectlyAnswered(): boolean {
     if (this.players[this.currentPlayer].isInPenaltyBox) {
       if (this.players[this.currentPlayer].isGettingOutOfPenaltyBox) {
-        console.log("Answer was correct!!!!");
+        console.log("---------------------------")
+        this.players[this.currentPlayer].isInPenaltyBox = false;
+        this.players[this.currentPlayer].isGettingOutOfPenaltyBox = false;
+        console.log("Answer was correct!!!!\n"+this.players[this.currentPlayer].name + " is leaving the penalty box.");
         this.players[this.currentPlayer].gold += 1;
         console.log(
           this.players[this.currentPlayer].name +
-            " now 1has " +
+            " now has " +
             this.players[this.currentPlayer].gold +
             " Gold Coins."
         );
