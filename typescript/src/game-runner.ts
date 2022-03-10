@@ -3,14 +3,15 @@ import { checkPlayers, roll, wasCorrectlyAnswered, wrongAnswer } from "./utils";
 
 export class GameRunner {
   public static main(): void {
-    const game = new Game(["Chet", "Pat", "Sue"]);
+    const game = new Game(["Chet", "Pat", "Sue"], 6);
 
     const isGameValid = checkPlayers(game.players);
     if (!isGameValid) {
       console.error("Game should have more than 2 and less than 7 players");
       return;
     }
-    let notAWinner;
+    let gameHasEnded = false;
+    let notAWinner = true;
     do {
       const diceRoll = Math.floor(Math.random() * 6) + 1;
       let action = roll(
@@ -20,17 +21,22 @@ export class GameRunner {
         game.isRock,
         diceRoll
       );
-      console.log(action);
+
       if (action != 2) {
         if (Math.floor(Math.random() * 10) == 7) {
           wrongAnswer(game.players, game.currentPlayer);
         } else {
-          notAWinner = wasCorrectlyAnswered(game.players, game.currentPlayer);
+          let winner = wasCorrectlyAnswered(
+            game.players,
+            game.currentPlayer,
+            game.maxGold
+          );
+          if (winner) gameHasEnded = true;
         }
       } else {
         notAWinner = true;
       }
-    } while (notAWinner);
+    } while (!gameHasEnded);
   }
 }
 
