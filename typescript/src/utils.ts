@@ -1,4 +1,5 @@
 import { Category, Player, Questions } from "./types";
+import * as readline from "readline-sync";
 
 export const initPlayers = (playerNames: string[]) => {
   let playerCount = 0;
@@ -21,7 +22,7 @@ export const didPlayerWin = (player: Player) => {
   return !(player.gold === 6);
 };
 
-export const currentCategory = (player: Player) => {
+export const currentCategory = (player: Player, isRock: boolean) => {
   let category: Category = "rock";
   if (player.place == 0) category = "pop";
   if (player.place == 1) category = "science";
@@ -32,10 +33,16 @@ export const currentCategory = (player: Player) => {
   if (player.place == 8) category = "pop";
   if (player.place == 9) category = "science";
   if (player.place == 10) category = "sports";
+
+  if (category == "rock" && !isRock) category = "techno";
   return category;
 };
-export const askQuestion = (player: Player, questions: Questions) => {
-  const category = currentCategory(player);
+export const askQuestion = (
+  player: Player,
+  questions: Questions,
+  isRock: boolean
+) => {
+  const category = currentCategory(player, isRock);
   const availableQuestions = questions[category] as string[];
   console.log(availableQuestions.shift());
 };
@@ -85,4 +92,34 @@ export const wasCorrectlyAnswered = (
 
     return winner;
   }
+};
+
+export const checkPlayers = (players: Player[]) => {
+  if (players.length >= 2 && players.length <= 6) {
+    return true;
+  }
+  return false;
+};
+
+export const askRockType = () => {
+  let rockPrompt: string = readline.question(
+    "Tu veux du rock mon copain ? (Y/N) : "
+  );
+
+  if (rockPrompt.toLowerCase() === "y") {
+    console.log("You choose Rock");
+    return true;
+  } else if (rockPrompt.toLowerCase() === "n") {
+    console.log("You'll have Techno questions");
+    return false;
+  } else {
+    console.log("Invalid answer, You'll have Techno questions");
+    return false;
+  }
+};
+
+export const createRockQuestion = (index: number, isRock: boolean) => {
+  let type: string;
+  type = isRock ? "Rock" : "Techno";
+  return type + " Question " + index;
 };

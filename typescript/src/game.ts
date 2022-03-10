@@ -1,5 +1,6 @@
 import {
   askQuestion,
+  askRockType,
   currentCategory,
   didPlayerWin,
   initPlayers,
@@ -9,17 +10,20 @@ import { Player, Questions } from "./types";
 export class Game {
   public players: Player[];
   public currentPlayer: number = 0;
+  private isRock: boolean;
 
   private questions: Questions;
 
   constructor(playerNames: string[]) {
     this.players = initPlayers(playerNames);
-    this.questions = { pop: [], science: [], rock: [], sports: [] };
+    this.questions = { pop: [], science: [], rock: [], sports: [], techno: [] };
+    this.isRock = askRockType();
     for (let i = 0; i < 50; i++) {
       this.questions.pop.push("Pop Question " + i);
       this.questions.science.push("Science Question " + i);
       this.questions.sports.push("Sports Question " + i);
-      this.questions.rock.push("Rock Question " + i);
+      if (this.isRock) this.questions.rock.push("Rock Question " + i);
+      else this.questions.techno.push("Rock Question " + i);
     }
   }
 
@@ -50,9 +54,14 @@ export class Game {
             this.players[this.currentPlayer].place
         );
         console.log(
-          "The category is " + currentCategory(this.players[this.currentPlayer])
+          "The category is " +
+            currentCategory(this.players[this.currentPlayer], this.isRock)
         );
-        askQuestion(this.players[this.currentPlayer], this.questions);
+        askQuestion(
+          this.players[this.currentPlayer],
+          this.questions,
+          this.isRock
+        );
       } else {
         console.log(
           this.players[this.currentPlayer].name +
@@ -74,9 +83,14 @@ export class Game {
           this.players[this.currentPlayer].place
       );
       console.log(
-        "The category is " + currentCategory(this.players[this.currentPlayer])
+        "The category is " +
+          currentCategory(this.players[this.currentPlayer], this.isRock)
       );
-      askQuestion(this.players[this.currentPlayer], this.questions);
+      askQuestion(
+        this.players[this.currentPlayer],
+        this.questions,
+        this.isRock
+      );
     }
   }
 
@@ -96,8 +110,6 @@ export class Game {
         this.currentPlayer += 1;
         if (this.currentPlayer == this.players.length) this.currentPlayer = 0;
 
-        return winner;
-      } else {
         this.currentPlayer += 1;
         if (this.currentPlayer == this.players.length) this.currentPlayer = 0;
         return true;

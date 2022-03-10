@@ -10,4 +10,4 @@ export type Questions = {
   [key in Category]: string[];
 };
 
-export type Category = "pop" | "science" | "sports" | "rock";
+export type Category = "pop" | "science" | "sports" | "rock" | "techno";
