@@ -11,6 +11,8 @@ export const initPlayers = (playerNames: string[]) => {
       name: playerName,
       gold: 0,
       place: 0,
+      streak: 0,
+      jokers: 1,
       isInPenaltyBox: false,
       isGettingOutOfPenaltyBox: false,
       hasQuit: false,
@@ -19,8 +21,8 @@ export const initPlayers = (playerNames: string[]) => {
   return players;
 };
 
-export const didPlayerWin = (player: Player) => {
-  return player.gold == 6;
+export const didPlayerWin = (player: Player, maxGold: number) => {
+  return player.gold >= maxGold;
 };
 
 export const currentCategory = (player: Player, isRock: boolean) => {
@@ -65,7 +67,8 @@ export const wrongAnswer = (players: Player[], currentPlayer: number) => {
 
 export const wasCorrectlyAnswered = (
   players: Player[],
-  currentPlayer: number
+  currentPlayer: number,
+  maxGold: number
 ) => {
   const player = players[currentPlayer];
   if (!player.hasQuit) {
@@ -74,15 +77,15 @@ export const wasCorrectlyAnswered = (
         console.log("---------------------------");
         console.log(
           "Answer was correct!!!!" +
-          player.name +
-          " is leaving the penalty box."
+            player.name +
+            " is leaving the penalty box."
         );
         player.streak += 1;
         player.gold += player.streak;
 
         console.log(player.name + " now 1has " + player.gold + " Gold Coins.");
 
-        var winner = didPlayerWin(player);
+        var winner = didPlayerWin(player, maxGold);
         currentPlayer += 1;
         if (currentPlayer == players.length) currentPlayer = 0;
 
@@ -100,7 +103,7 @@ export const wasCorrectlyAnswered = (
 
       console.log(player.name + " now 2has " + player.gold + " Gold Coins.");
 
-      var winner = didPlayerWin(player);
+      var winner = didPlayerWin(player, maxGold);
 
       currentPlayer += 1;
       if (currentPlayer == players.length) currentPlayer = 0;
@@ -146,18 +149,20 @@ export const askAction = (player: Player) => {
 
   if (askPrompt === "1") {
     console.log("You'll answer to this question");
-    return 1;
   } else if (askPrompt === "2") {
-    console.log("You skip the question, you lost your Joker !");
-    return 2;
+    if (player.jokers > 0) {
+      console.log("You skip the question, you lost your Joker !");
+    } else {
+      console.log("You don't have any jokers, You'll answer to this question");
+      return 1;
+    }
   } else if (askPrompt === "3") {
     console.log("You are out !");
-    player.hasQuit = true;
-    return 3;
   } else {
     console.log("Invalid answer, You'll answer to this question");
     return 0;
   }
+  return Number(askPrompt);
 };
 
 export const createRockQuestion = (index: number, isRock: boolean) => {
@@ -190,7 +195,11 @@ export const roll = (
 
         console.log(player.name + "'s new location is " + player.place);
         console.log("The category is " + currentCategory(player, isRock));
-        askAction(player);
+        if (askAction(player) == 2) {
+          player.jokers--;
+          return 2;
+        }
+
         askQuestion(player, questions, isRock);
       } else {
         console.log(player.name + " is not getting out of the penalty box");
@@ -204,7 +213,10 @@ export const roll = (
 
       console.log(player.name + "'s new location is " + player.place);
       console.log("The category is " + currentCategory(player, isRock));
-      askAction(player);
+      if (askAction(player) == 2) {
+        player.jokers--;
+        return 2;
+      }
       askQuestion(player, questions, isRock);
     }
   }

@@ -3,7 +3,7 @@ import { checkPlayers, roll, wasCorrectlyAnswered, wrongAnswer } from "./utils";
 
 export class GameRunner {
   public static main(): void {
-    const game = new Game(["Chet", "Pat", "Sue"]);
+    const game = new Game(["Chet", "Pat", "Sue"], 6);
 
     const isGameValid = checkPlayers(game.players);
     if (!isGameValid) {
@@ -11,9 +11,10 @@ export class GameRunner {
       return;
     }
     let gameHasEnded = false;
+    let notAWinner = true;
     do {
       const diceRoll = Math.floor(Math.random() * 6) + 1;
-      roll(
+      let action = roll(
         game.players,
         game.currentPlayer,
         game.questions,
@@ -21,11 +22,19 @@ export class GameRunner {
         diceRoll
       );
 
-      if (Math.floor(Math.random() * 10) == 7) {
-        wrongAnswer(game.players, game.currentPlayer);
+      if (action != 2) {
+        if (Math.floor(Math.random() * 10) == 7) {
+          wrongAnswer(game.players, game.currentPlayer);
+        } else {
+          let winner = wasCorrectlyAnswered(
+            game.players,
+            game.currentPlayer,
+            game.maxGold
+          );
+          if (winner) gameHasEnded = true;
+        }
       } else {
-        let winner = wasCorrectlyAnswered(game.players, game.currentPlayer);
-        if (winner) gameHasEnded = true;
+        notAWinner = true;
       }
     } while (!gameHasEnded);
   }
