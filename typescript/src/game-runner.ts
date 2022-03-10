@@ -35,6 +35,7 @@ export class GameRunner {
                 diceRoll,
                 game.nextCategory
             );
+            game.nextCategory = ""
 
             if (action == 0) {
                 if (Math.floor(Math.random() * 3) == 1) {
