@@ -2,6 +2,7 @@ export interface Player {
   name: string;
   place: number;
   gold: number;
+  jokers: number;
   isInPenaltyBox: boolean;
   isGettingOutOfPenaltyBox: boolean;
 }
