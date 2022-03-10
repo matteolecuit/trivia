@@ -32,12 +32,13 @@ export class GameRunner {
                 game.currentPlayer,
                 game.questions,
                 game.isRock,
-                diceRoll
+                diceRoll,
+                game.nextCategory
             );
 
             if (action == 0) {
                 if (Math.floor(Math.random() * 3) == 1) {
-                    wrongAnswer(game.players, game.currentPlayer);
+                    game.nextCategory = wrongAnswer(game.players, game.currentPlayer, game.nextCategory);
                 } else {
                     let winner = wasCorrectlyAnswered(
                         game.players,

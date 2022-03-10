@@ -6,6 +6,7 @@ export interface Player {
   jokers: number;
   isInPenaltyBox: boolean;
   hasQuit: boolean;
+  designedCategory: string;
   prison: number;
 }
 

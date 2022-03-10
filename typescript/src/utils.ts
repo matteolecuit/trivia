@@ -1,5 +1,6 @@
 import { Category, Player, Questions } from "./types";
 import * as readline from "readline-sync";
+import { categories } from '../enums/categories.enum';
 
 export const initPlayers = (playerNames: string[]) => {
   let playerCount = 0;
@@ -15,6 +16,7 @@ export const initPlayers = (playerNames: string[]) => {
       jokers: 1,
       isInPenaltyBox: false,
       hasQuit: false,
+      designedCategory: "",
       prison: 0,
     };
   });
@@ -25,7 +27,14 @@ export const didPlayerWin = (player: Player, maxGold: number) => {
   return player.gold >= maxGold;
 };
 
-export const currentCategory = (player: Player, isRock: boolean) => {
+export const currentCategory = (player: Player, isRock: boolean, nextCategory: string) => {
+  if (nextCategory.length > 0) {
+    let choosenCategory = nextCategory;
+    console.log(`The category has be defined previously and will be ${choosenCategory}`);
+    nextCategory = "";
+    return choosenCategory;
+  }
+  
   let category: Category = "rock";
   if (player.place == 0) category = "pop";
   if (player.place == 1) category = "science";
@@ -43,10 +52,11 @@ export const currentCategory = (player: Player, isRock: boolean) => {
 export const askQuestion = (
   player: Player,
   questions: Questions,
-  isRock: boolean
+  isRock: boolean,
+  nextCategory: string
 ) => {
   if (!player.hasQuit) {
-    const category = currentCategory(player, isRock);
+    const category = currentCategory(player, isRock, nextCategory);
     const availableQuestions = questions[category] as string[];
     if (availableQuestions.length <= 0) {
       generateQuestions
@@ -56,17 +66,22 @@ export const askQuestion = (
   }
 };
 
-export const wrongAnswer = (players: Player[], currentPlayer: number) => {
+export const wrongAnswer = (players: Player[], currentPlayer: number, nextCategory: string) => {
   const player = players[currentPlayer];
   console.log("Question was incorrectly answered");
   console.log(player.name + " was sent to the penalty box");
   player.isInPenaltyBox = true;
+  let designedCategory = askCategory(player);
   player.prison += 1;
 
   player.streak = 0;
   console.log(
     "🍦Streak has been reset for " + player.name + " streak: " + player.streak
   );
+  currentPlayer += 1;
+  if (currentPlayer == players.length) currentPlayer = 0;
+
+  return designedCategory
 };
 
 export const switchPlayer = (currentPlayer: number, players: Player[]) => {
@@ -153,6 +168,27 @@ export const askAction = (player: Player) => {
   return Number(askPrompt);
 };
 
+export const askCategory = (player: Player) => {
+  let isValid = false;
+  let askPrompt = "";
+  let validCategories: string[] = Object.values(categories);
+
+  do {
+    console.log(validCategories);
+    askPrompt = readline.question(
+      "Which category would you like to give to next player ? : "
+    );
+
+    if (validCategories.includes(askPrompt)) {
+      isValid = true;
+    } else {
+      console.log("Please choose a valid category")
+    }
+  } while (!isValid)
+
+  return askPrompt;
+};
+
 export const createRockQuestion = (index: number, isRock: boolean) => {
   let type: string;
   type = isRock ? "Rock" : "Techno";
@@ -164,7 +200,8 @@ export const roll = (
   currentPlayer: number,
   questions: Questions,
   isRock: boolean,
-  roll: number
+  roll: number,
+  nextCategory: string
 ) => {
   const player = players[currentPlayer];
   console.log(player.name + " is the current player");
@@ -185,13 +222,13 @@ export const roll = (
     }
     player.place = move(player, roll);
 
-    console.log("The category is " + currentCategory(player, isRock));
+    console.log("The category is " + currentCategory(player, isRock, nextCategory));
     if (askAction(player) == 2) {
       player.jokers--;
       return 2;
     }
 
-    askQuestion(player, questions, isRock);
+    askQuestion(player, questions, isRock, nextCategory);
 
     return 0;
 
