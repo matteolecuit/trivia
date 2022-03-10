@@ -29,26 +29,58 @@ export class Game {
   }
 
   public roll(roll: number) {
-    console.log(
-      this.players[this.currentPlayer].name + " is the current player"
-    );
-    console.log("They have rolled a " + roll);
-
-    if (this.players[this.currentPlayer].isInPenaltyBox) {
-      if (roll % 2 != 0) {
-        this.players[this.currentPlayer].isGettingOutOfPenaltyBox = true;
-
-        console.log(
-          this.players[this.currentPlayer].name +
-            " is getting out of the penalty box"
-        );
+    if (!this.players[this.currentPlayer].hasQuit) {
+      console.log(
+        this.players[this.currentPlayer].name + " is the current player"
+      );
+      console.log("They have rolled a " + roll);
+  
+      if (this.players[this.currentPlayer].isInPenaltyBox) {
+        if (roll % 2 != 0) {
+          this.players[this.currentPlayer].isGettingOutOfPenaltyBox = true;
+  
+          console.log(
+            this.players[this.currentPlayer].name +
+              " is getting out of the penalty box"
+          );
+          this.players[this.currentPlayer].place =
+            this.players[this.currentPlayer].place + roll;
+          if (this.players[this.currentPlayer].place > 11) {
+            this.players[this.currentPlayer].place =
+              this.players[this.currentPlayer].place - 12;
+          }
+  
+          console.log(
+            this.players[this.currentPlayer].name +
+              "'s new location is " +
+              this.players[this.currentPlayer].place
+          );
+          console.log(
+            "The category is " +
+              currentCategory(this.players[this.currentPlayer], this.isRock)
+          );
+          askAction(this.players[this.currentPlayer]);
+          askQuestion(
+            this.players[this.currentPlayer],
+            this.questions,
+            this.isRock
+          );
+        
+        } else {
+          console.log(
+            this.players[this.currentPlayer].name +
+              " is not getting out of the penalty box"
+          );
+          this.players[this.currentPlayer].isGettingOutOfPenaltyBox = false;
+        }
+      } else {
         this.players[this.currentPlayer].place =
           this.players[this.currentPlayer].place + roll;
         if (this.players[this.currentPlayer].place > 11) {
           this.players[this.currentPlayer].place =
             this.players[this.currentPlayer].place - 12;
         }
-
+  
         console.log(
           this.players[this.currentPlayer].name +
             "'s new location is " +
@@ -58,42 +90,14 @@ export class Game {
           "The category is " +
             currentCategory(this.players[this.currentPlayer], this.isRock)
         );
-		askAction();
+        askAction(this.players[this.currentPlayer]);
         askQuestion(
           this.players[this.currentPlayer],
           this.questions,
           this.isRock
         );
-      } else {
-        console.log(
-          this.players[this.currentPlayer].name +
-            " is not getting out of the penalty box"
-        );
-        this.players[this.currentPlayer].isGettingOutOfPenaltyBox = false;
+      
       }
-    } else {
-      this.players[this.currentPlayer].place =
-        this.players[this.currentPlayer].place + roll;
-      if (this.players[this.currentPlayer].place > 11) {
-        this.players[this.currentPlayer].place =
-          this.players[this.currentPlayer].place - 12;
-      }
-
-      console.log(
-        this.players[this.currentPlayer].name +
-          "'s new location is " +
-          this.players[this.currentPlayer].place
-      );
-      console.log(
-        "The category is " +
-          currentCategory(this.players[this.currentPlayer], this.isRock)
-      );
-	  askAction();
-      askQuestion(
-        this.players[this.currentPlayer],
-        this.questions,
-        this.isRock
-      );
     }
   }
 

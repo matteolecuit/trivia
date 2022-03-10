@@ -4,6 +4,7 @@ export interface Player {
   gold: number;
   isInPenaltyBox: boolean;
   isGettingOutOfPenaltyBox: boolean;
+  hasQuit: boolean;
 }
 
 export type Questions = {
