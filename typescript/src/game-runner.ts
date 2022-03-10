@@ -10,7 +10,7 @@ export class GameRunner {
       console.error("Game should have more than 2 and less than 7 players");
       return;
     }
-    let notAWinner;
+    let notAWinner = true;
     do {
       game.roll(Math.floor(Math.random() * 6) + 1);
 

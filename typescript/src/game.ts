@@ -122,7 +122,7 @@ export class Game {
 
         this.currentPlayer += 1;
         if (this.currentPlayer == this.players.length) this.currentPlayer = 0;
-        return true;
+        return winner;
       }
     } else {
       console.log("Answer was corrent!!!!");
