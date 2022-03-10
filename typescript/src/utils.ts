@@ -79,7 +79,7 @@ export const wasCorrectlyAnswered = (
       if (player.isGettingOutOfPenaltyBox) {
         console.log("---------------------------");
         console.log(
-          "Answer was correct!!!!" +
+          "🏃 Answer was correct!!!!" +
             player.name +
             " is leaving the penalty box."
         );
@@ -104,7 +104,14 @@ export const wasCorrectlyAnswered = (
       player.streak += 1;
       player.gold += player.streak;
 
-      console.log(player.name + " now 2has " + player.gold + " Gold Coins.");
+      console.log(
+        "🔥" +
+          player.name +
+          " now 2has " +
+          player.gold +
+          " Gold Coins and has a streak of " +
+          player.streak
+      );
 
       var winner = didPlayerWin(player, maxGold);
 

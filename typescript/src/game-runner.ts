@@ -9,7 +9,7 @@ import {
 
 export class GameRunner {
   public static main(): void {
-    const game = new Game(["Chet", "Pat", "Sue"], 6);
+    const game = new Game(["Chet", "Pat", "Sue"], 10);
 
     const isGameValid = checkPlayers(game.players);
     if (!isGameValid) {
@@ -38,6 +38,10 @@ export class GameRunner {
           );
           if (winner) gameHasEnded = true;
         }
+      } else {
+        console.log(
+          "🃏" + game.players[game.currentPlayer].name + " used a joker"
+        );
       }
       game.currentPlayer = switchPlayer(game.currentPlayer, game.players);
     } while (!gameHasEnded);
