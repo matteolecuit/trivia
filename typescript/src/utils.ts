@@ -15,9 +15,9 @@ export const initPlayers = (playerNames: string[]) => {
       streak: 0,
       jokers: 1,
       isInPenaltyBox: false,
-      isGettingOutOfPenaltyBox: false,
       hasQuit: false,
-      designedCategory: ""
+      designedCategory: "",
+      prison: 0,
     };
   });
   return players;
@@ -56,11 +56,12 @@ export const askQuestion = (
   nextCategory: string
 ) => {
   if (!player.hasQuit) {
-    let availableQuestions = [];
-    let category = currentCategory(player, isRock, nextCategory)
-    availableQuestions = questions[category] as string[];
-    console.log("The category is " + category);
-
+    const category = currentCategory(player, isRock, nextCategory);
+    const availableQuestions = questions[category] as string[];
+    if (availableQuestions.length <= 0) {
+      generateQuestions
+        (questions, 10, isRock);
+    }
     console.log(availableQuestions.shift());
   }
 };
@@ -71,6 +72,7 @@ export const wrongAnswer = (players: Player[], currentPlayer: number, nextCatego
   console.log(player.name + " was sent to the penalty box");
   player.isInPenaltyBox = true;
   let designedCategory = askCategory(player);
+  player.prison += 1;
 
   player.streak = 0;
   console.log(
@@ -94,30 +96,6 @@ export const wasCorrectlyAnswered = (
 ) => {
   const player = players[currentPlayer];
   if (!player.hasQuit) {
-    if (player.isInPenaltyBox) {
-      if (player.isGettingOutOfPenaltyBox) {
-        console.log("---------------------------");
-        console.log(
-          "🏃 Answer was correct!!!!" +
-            player.name +
-            " is leaving the penalty box."
-        );
-
-        player.isInPenaltyBox = false;
-        player.isGettingOutOfPenaltyBox = false;
-
-        player.streak += 1;
-        player.gold += player.streak;
-
-        console.log(player.name + " now 1has " + player.gold + " Gold Coins.");
-
-        var winner = didPlayerWin(player, maxGold);
-
-        return winner;
-      } else {
-        return false;
-      }
-    } else {
       console.log("Answer was correct!!!!");
 
       player.streak += 1;
@@ -125,20 +103,16 @@ export const wasCorrectlyAnswered = (
 
       console.log(
         "🔥" +
-          player.name +
-          " now 2has " +
-          player.gold +
-          " Gold Coins and has a streak of " +
-          player.streak
+        player.name +
+        " now 2has " +
+        player.gold +
+        " Gold Coins and has a streak of " +
+        player.streak
       );
 
       var winner = didPlayerWin(player, maxGold);
 
-      currentPlayer += 1;
-      if (currentPlayer == players.length) currentPlayer = 0;
-
       return winner;
-    }
   } else {
     return false;
   }
@@ -235,25 +209,28 @@ export const roll = (
 
   if (!player.hasQuit) {
     if (player.isInPenaltyBox) {
-      if (roll % 2 != 0) {
-        player.isGettingOutOfPenaltyBox = true;
-        console.log(player.name + " is getting out of the penalty box");
-
+      const rollExitPrison = Math.floor(Math.random() * player.prison) + 1
+      console.log('🏃🏃You have 1/'+player.prison+" chance to exit. Result must be 1 : "+rollExitPrison);
+      if (rollExitPrison == 1) {
+        player.isInPenaltyBox = false;
+        console.log("🏃 "+player.name + " is getting out of the penalty box");
+        player.place = move(player, roll);
       } else {
         console.log(player.name + " is not getting out of the penalty box");
-        player.isGettingOutOfPenaltyBox = false;
-        return 0;
       }
+      return 1;
     }
     player.place = move(player, roll);
 
-    console.log(player.name + "'s new location is " + player.place);
+    console.log("The category is " + currentCategory(player, isRock, nextCategory));
     if (askAction(player) == 2) {
       player.jokers--;
       return 2;
     }
 
     askQuestion(player, questions, isRock, nextCategory);
+
+    return 0;
 
   }
 };
@@ -263,5 +240,18 @@ export const move = (player: Player, roll: number) => {
   if (player.place > 11) {
     player.place = player.place - 12;
   }
+  console.log(player.name + "'s new location is " + player.place);
   return player.place;
+}
+
+export const generateQuestions = (questions: Questions, amount: number, isRock: boolean) => {
+  console.log("🃏 Generating " + amount + " cards...");
+  for (let i = 0; i < amount; i++) {
+    questions.pop.push("Pop Question " + i);
+    questions.science.push("Science Question " + i);
+    questions.sports.push("Sports Question " + i);
+    if (isRock) questions.rock.push("Rock Question " + i);
+    else questions.techno.push("Rock Question " + i);
+  }
+  return questions;
 }
