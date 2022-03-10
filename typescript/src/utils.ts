@@ -80,6 +80,10 @@ export const wasCorrectlyAnswered = (
             player.name +
             " is leaving the penalty box."
         );
+
+        player.isInPenaltyBox = false;
+        player.isGettingOutOfPenaltyBox = false;
+
         player.streak += 1;
         player.gold += player.streak;
 
