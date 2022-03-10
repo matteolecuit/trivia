@@ -10,7 +10,11 @@ export class GameRunner {
       console.error("Game should have more than 2 and less than 7 players");
       return;
     }
+<<<<<<< HEAD
     let gameHasEnded = false;
+=======
+    let notAWinner = true;
+>>>>>>> master
     do {
       const diceRoll = Math.floor(Math.random() * 6) + 1;
       roll(
