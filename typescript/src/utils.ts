@@ -86,7 +86,6 @@ export const wasCorrectlyAnswered = (
     console.log(player.name + " now 2has " + player.gold + " Gold Coins.");
 
     var winner = didPlayerWin(player);
-    console.log({ winner });
 
     currentPlayer += 1;
     if (currentPlayer == players.length) currentPlayer = 0;
@@ -116,6 +115,29 @@ export const askRockType = () => {
   } else {
     console.log("Invalid answer, You'll have Techno questions");
     return false;
+  }
+};
+
+export const askAction = () => {
+  let askPrompt: string = readline.question(
+    "Choisissez votre action ? : \
+    1- Répondre à la question \
+    2- Utiliser un joker \
+    3- Quitter la partie"
+  );
+
+  if (askPrompt === "1") {
+    console.log("You'll answer to this question");
+    return 1;
+  } else if (askPrompt === "2") {
+    console.log("You skip the question, you lost your Joker !");
+    return 2;
+  } else if (askPrompt === "3") {
+    console.log("You are out !");
+    return 3;
+  } else {
+    console.log("Invalid answer, You'll answer to this question");
+    return 0;
   }
 };
 

@@ -33,7 +33,6 @@ export class GameRunner {
         game.currentPlayer = updatedCurrentPlayer;
         if (winner) gameHasEnded = true;
       }
-      console.log({ gameHasEnded });
     } while (!gameHasEnded);
   }
 }
