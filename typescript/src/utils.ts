@@ -97,7 +97,6 @@ export const currentCategory = (nextCategory: string, questions: Questions) => {
       if (chosenQuestion <= 0) category = c.category;
     }
   }
-  console.log({ category });
   return category;
 };
 export const askQuestion = (
