@@ -9,7 +9,10 @@ import {
 import * as readline from "readline-sync";
 
 export class GameRunner {
-    public static main(): void {
+    
+    game: Game;
+
+    public main(): void {
         let maxGold: number = readline.question(
             "Maximum gold wished ? (6 min) "
         );
@@ -17,62 +20,79 @@ export class GameRunner {
             console.log("Error : you cannot have less than 6 gold, maximum gold are set to 6");
             maxGold = 6;
         }
-        const game = new Game(["Chet", "Pat", "Sue"], maxGold);
 
-        const isGameValid = checkPlayers(game.players);
-        if (!isGameValid) {
-            console.error("Game should have more than 2 and less than 7 players");
-            return;
-        }
+        do{
+            this.game = new Game(["Chet", "Pat", "Sue"], maxGold);
+
+            const isGameValid = checkPlayers(this.game.players);
+            if (!isGameValid) {
+                console.error("Game should have more than 2 and less than 7 players");
+                return;
+            }
+            this.play()
+        }while(this.wantToReplay())
+        
+    }
+
+    private play(): void{
         let gameHasEnded = false;
         do {
             const diceRoll = Math.floor(Math.random() * 6) + 1;
             let action = roll(
-                game.players,
-                game.currentPlayer,
-                game.questions,
-                game.isRock,
+                this.game.players,
+                this.game.currentPlayer,
+                this.game.questions,
+                this.game.isRock,
                 diceRoll,
-                game.nextCategory,
-                game.rageQuitBoard
+                this.game.nextCategory,
+                this.game.rageQuitBoard
             );
-            game.nextCategory = ""
+            this.game.nextCategory = ""
 
             if (action == 0) {
                 if (Math.floor(Math.random() * 3) == 1) {
-                    game.nextCategory = wrongAnswer(game.players, game.currentPlayer, game.nextCategory);
+                    this.game.nextCategory = wrongAnswer(this.game.players, this.game.currentPlayer, this.game.nextCategory);
                 } else {
                     let winner = wasCorrectlyAnswered(
-                        game.players,
-                        game.currentPlayer,
-                        game.maxGold
+                        this.game.players,
+                        this.game.currentPlayer,
+                        this.game.maxGold
                     );
                     if (winner) {
-                        game.leaderboard.push(game.players[game.currentPlayer]);
-                        game.players[game.currentPlayer].hasQuit = true;
+                        this.game.leaderboard.push(this.game.players[this.game.currentPlayer]);
+                        this.game.players[this.game.currentPlayer].hasQuit = true;
                     } 
-                    if ((game.leaderboard.length === (game.players.length - game.rageQuitBoard.length)) || game.leaderboard.length === 3) gameHasEnded = true;
+                    if ((this.game.leaderboard.length === (this.game.players.length - this.game.rageQuitBoard.length)) || this.game.leaderboard.length === 3) gameHasEnded = true;
                 }
             } if(action == 2) {
                 console.log(
-                    "🃏" + game.players[game.currentPlayer].name + " used a joker"
+                    "🃏" + this.game.players[this.game.currentPlayer].name + " used a joker"
                 );
             }
-            game.currentPlayer = switchPlayer(game.currentPlayer, game.players);
+            this.game.currentPlayer = switchPlayer(this.game.currentPlayer, this.game.players);
         } while (!gameHasEnded);
-        if (game.leaderboard.length + game.rageQuitBoard.length >= 3) {
-            game.rageQuitBoard.reverse();
-            game.rageQuitBoard.forEach(element => {
-                game.leaderboard.push(element);
+        if (this.game.leaderboard.length + this.game.rageQuitBoard.length >= 3) {
+            this.game.rageQuitBoard.reverse();
+            this.game.rageQuitBoard.forEach(element => {
+                this.game.leaderboard.push(element);
             })
         }
         let i = 1;
         console.log("LeaderBoard: \ ");
-        game.leaderboard.forEach(element => {
+        this.game.leaderboard.forEach(element => {
             console.log(i + " - " + element.name + " \ ");
             i++;
         })
     }
+
+    private wantToReplay() {
+        let askPrompt: string = readline.question("Souhaitez-vous rejouer ? (Y/N)");
+        if (askPrompt == "Y" || askPrompt == "y") {
+            return true;
+        }else{
+            return false;
+        }
+    }
 }
 
-GameRunner.main();
+new GameRunner().main();
