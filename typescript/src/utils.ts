@@ -27,32 +27,77 @@ export const didPlayerWin = (player: Player, maxGold: number) => {
   return player.gold >= maxGold;
 };
 
-export const currentCategory = (
-  player: Player,
-  isRock: boolean,
-  nextCategory: string
-) => {
+interface CategoriesLength {
+  category: Category;
+  length: number;
+}
+export const currentCategory = (nextCategory: string, questions: Questions) => {
   if (nextCategory.length > 0) {
-    let choosenCategory = nextCategory;
+    let chosenCategory = nextCategory;
     console.log(
-      `The category has be defined previously and will be ${choosenCategory}`
+      `The category has be defined previously and will be ${chosenCategory}`
     );
     nextCategory = '';
-    return choosenCategory;
+    return chosenCategory;
   }
 
-  let category: Category = 'rock';
-  if (player.place == 0) category = 'pop';
-  if (player.place == 1) category = 'science';
-  if (player.place == 2) category = 'sports';
-  if (player.place == 4) category = 'pop';
-  if (player.place == 5) category = 'science';
-  if (player.place == 6) category = 'sports';
-  if (player.place == 8) category = 'pop';
-  if (player.place == 9) category = 'science';
-  if (player.place == 10) category = 'sports';
+  const categoriesLength: CategoriesLength[] = [
+    {
+      category: 'rock',
+      length: questions.rock.length
+    },
+    {
+      category: 'pop',
+      length: questions.pop.length
+    },
+    {
+      category: 'science',
+      length: questions.science.length
+    },
+    {
+      category: 'sports',
+      length: questions.sports.length
+    },
+    {
+      category: 'techno',
+      length: questions.techno.length
+    },
+    {
+      category: 'rap',
+      length: questions.rap.length
+    },
+    {
+      category: 'philosophy',
+      length: questions.philosophy.length
+    },
+    {
+      category: 'literature',
+      length: questions.literature.length
+    },
+    {
+      category: 'geography',
+      length: questions.geography.length
+    },
+    {
+      category: 'people',
+      length: questions.people.length
+    }
+  ];
 
-  if (category == 'rock' && !isRock) category = 'techno';
+  let totalLength = categoriesLength
+    .map((a) => a.length)
+    .reduce(function (a, b) {
+      return a + b;
+    });
+  let chosenQuestion = Math.floor(Math.random() * totalLength);
+  let category: Category;
+  for (const c of categoriesLength) {
+    if (!category) {
+      chosenQuestion -= c.length;
+      if (chosenQuestion <= 0) category = c.category;
+    }
+  }
+  console.log({ category });
   return category;
 };
 export const askQuestion = (
@@ -62,7 +107,7 @@ export const askQuestion = (
   nextCategory: string
 ) => {
   if (!player.hasQuit) {
-    const category = currentCategory(player, isRock, nextCategory);
+    const category = currentCategory(nextCategory, questions);
     const availableQuestions = questions[category] as string[];
     if (availableQuestions.length <= 0) {
       generateQuestions(questions, 10, isRock);
@@ -181,9 +226,7 @@ export const roll = (
     player.place = move(player, roll);
 
     console.log(player.name + "'s new location is " + player.place);
-    console.log(
-      'The category is ' + currentCategory(player, isRock, nextCategory)
-    );
+    console.log('The category is ' + currentCategory(nextCategory, questions));
     if (getActionFromPrompt(player, rageQuitBoard, autoMode) == 2) {
       player.jokers--;
       return 2;
