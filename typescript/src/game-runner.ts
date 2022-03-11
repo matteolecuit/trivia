@@ -17,6 +17,7 @@ export class GameRunner {
             console.log("Error : you cannot have less than 6 gold, maximum gold are set to 6");
             maxGold = 6;
         }
+
         const game = new Game(["Chet", "Pat", "Sue"], maxGold);
 
         const isGameValid = checkPlayers(game.players);
@@ -50,10 +51,10 @@ export class GameRunner {
                     if (winner) {
                         game.leaderboard.push(game.players[game.currentPlayer]);
                         game.players[game.currentPlayer].hasQuit = true;
-                    } 
+                    }
                     if ((game.leaderboard.length === (game.players.length - game.rageQuitBoard.length)) || game.leaderboard.length === 3) gameHasEnded = true;
                 }
-            } if(action == 2) {
+            } if (action == 2) {
                 console.log(
                     "🃏" + game.players[game.currentPlayer].name + " used a joker"
                 );

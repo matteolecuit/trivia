@@ -214,11 +214,11 @@ export const roll = (
   if (!player.hasQuit) {
     if (player.isInPenaltyBox) {
 
-      const chancesOfGettinOut = Math.floor(1 / player.prison + 1 / (10 - player.timeInPenaltyBox));
+      const chancesOfGettinOut = (1 / player.prison) + (1 / (10 - player.timeInPenaltyBox));
 
-      const canLeaveJail = Math.floor(Math.random()) > chancesOfGettinOut;
+      const canLeaveJail = Math.floor(Math.random()) < chancesOfGettinOut;
 
-      console.log('🏃🏃You have ' + chancesOfGettinOut * 100 + '% chance to exit.');
+      console.log('🏃🏃You have ' + Math.floor(chancesOfGettinOut * 100) + '% chance to exit.');
       if (canLeaveJail) {
         player.isInPenaltyBox = false;
         player.timeInPenaltyBox = 0;
