@@ -5,6 +5,7 @@ export interface Player {
   streak: number;
   jokers: number;
   isInPenaltyBox: boolean;
+  timeInPenaltyBox: number
   hasQuit: boolean;
   designedCategory: string;
   prison: number;
