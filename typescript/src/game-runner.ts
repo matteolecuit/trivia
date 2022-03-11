@@ -9,6 +9,7 @@ import {
 import {
   getGameModeFromPrompt,
   getGoldLimitFromPrompt,
+  getNuberCellFromPrompt,
   wantToReplay,
 } from "./prompt-service";
 
@@ -20,8 +21,11 @@ export class GameRunner {
     const gameMode = getGameModeFromPrompt();
     let autoMode = gameMode === "auto";
     const maxGold = getGoldLimitFromPrompt(autoMode);
+    const playersNames = ["Chet", "Pat", "Sue"];
+    const numberCells = getNuberCellFromPrompt(playersNames);
+    
         do{
-            this.game = new Game(["Chet", "Pat", "Sue"], maxGold, autoMode);
+            this.game = new Game(playersNames, maxGold, autoMode, numberCells);
 
             const isGameValid = checkPlayers(this.game.players);
             if (!isGameValid) {
@@ -38,20 +42,14 @@ export class GameRunner {
         do {
             const diceRoll = Math.floor(Math.random() * 6) + 1;
             let action = roll(
-                this.game.players,
-                this.game.currentPlayer,
-                this.game.questions,
-                this.game.isRock,
+                this.game,
                 diceRoll,
-                this.game.nextCategory,
-                this.game.rageQuitBoard,
-                this.game.autoMode
             );
             this.game.nextCategory = ""
             if(this.game.rageQuitBoard.length === 1 && this.game.players.length === 2) gameHasEnded = true;
             if (action == 0) {
                 if (Math.floor(Math.random() * 3) == 1) {
-                    this.game.nextCategory = wrongAnswer(this.game.players, this.game.currentPlayer, this.game.nextCategory, this.game.autoMode);
+                    this.game.nextCategory = wrongAnswer(this.game);
                 } else {
                     let winner = wasCorrectlyAnswered(
                         this.game.players,

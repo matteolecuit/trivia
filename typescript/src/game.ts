@@ -12,8 +12,10 @@ export class Game {
   public rageQuitBoard: Player[];
   public nextCategory: string;
   public autoMode: boolean;
+  public jail: Player[] = [];
+  public jailSize: number;
 
-  constructor(playerNames: string[], maxGold: number, autoMode: boolean) {
+  constructor(playerNames: string[], maxGold: number, autoMode: boolean, numberCells: number) {
     this.players = initPlayers(playerNames);
     this.maxGold = maxGold;
     this.questions = {
@@ -33,6 +35,7 @@ export class Game {
     this.rageQuitBoard = [];
     this.nextCategory = '';
     this.autoMode = autoMode;
+    this.jailSize = numberCells;
     generateQuestions(this.questions, 2, this.isRock);
     /*for (let i = 0; i < 50; i++) {
             this.questions.pop.push("Pop Question " + i);
