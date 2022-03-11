@@ -203,7 +203,7 @@ export const roll = (
   questions: Questions,
   isRock: boolean,
   roll: number,
-  nextCategory: string
+  nextCategory: string,
   rageQuitBoard: Player[]
 ) => {
   const player = players[currentPlayer];
@@ -226,7 +226,7 @@ export const roll = (
     player.place = move(player, roll);
 
     console.log(player.name + "'s new location is " + player.place);
-    console.log("The category is " + currentCategory(player, isRock));
+    console.log("The category is " + currentCategory(player, isRock, nextCategory));
     if (askAction(player, rageQuitBoard) == 2) {
       player.jokers--;
       return 2;

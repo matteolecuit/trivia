@@ -33,8 +33,8 @@ export class GameRunner {
                 game.questions,
                 game.isRock,
                 diceRoll,
+                game.nextCategory,
                 game.rageQuitBoard
-                game.nextCategory
             );
             game.nextCategory = ""
 
