@@ -117,3 +117,15 @@ export const wantToReplay = () => {
     return false;
   }
 };
+
+export const getNuberCellFromPrompt = (players: string[]) => {
+  let askPrompt: string = readline.question('Number of cells in prison ?');
+  let numberCell = parseInt(askPrompt)
+  if (isNaN(numberCell)) {
+    console.log('Error : Number of cells in prison has been set to 0');
+    return players.length;
+  } else {
+    console.log(numberCell + 'cell(s) in prison available !');
+    return numberCell;
+  }
+};

@@ -1,3 +1,4 @@
+import { Game } from './game';
 import { getActionFromPrompt, getCategoryFromPrompt } from './prompt-service';
 import { Category, Player, Questions } from './types';
 
@@ -72,24 +73,33 @@ export const askQuestion = (
 };
 
 export const wrongAnswer = (
-  players: Player[],
-  currentPlayer: number,
-  nextCategory: string,
-  autoMode: boolean
+  game: Game
 ) => {
-  const player = players[currentPlayer];
+  const player = game.players[game.currentPlayer];
   console.log('Question was incorrectly answered');
   console.log(player.name + ' was sent to the penalty box');
   player.isInPenaltyBox = true;
-  let designedCategory = getCategoryFromPrompt(player, autoMode);
+  console.log(game.jail.length, game.jailSize);
+  
+  console.log(game.jail);
+  
+  if (game.jail.length >= game.jailSize) {
+    let freePlayer = game.jail.pop();
+    freePlayer.isInPenaltyBox = false;
+    console.log(freePlayer.name + ' is freed 🏃');
+  }
+  game.jail.unshift(player);
+  console.log(game.jail);
+
+  let designedCategory = getCategoryFromPrompt(player, game.autoMode);
   player.prison += 1;
 
   player.streak = 0;
   console.log(
     '🍦Streak has been reset for ' + player.name + ' streak: ' + player.streak
   );
-  currentPlayer += 1;
-  if (currentPlayer == players.length) currentPlayer = 0;
+  game.currentPlayer += 1;
+  if (game.currentPlayer == game.players.length) game.currentPlayer = 0;
 
   return designedCategory;
 };
@@ -142,16 +152,10 @@ export const createRockQuestion = (index: number, isRock: boolean) => {
 };
 
 export const roll = (
-  players: Player[],
-  currentPlayer: number,
-  questions: Questions,
-  isRock: boolean,
+  game: Game,
   roll: number,
-  nextCategory: string,
-  rageQuitBoard: Player[],
-  autoMode: boolean
 ) => {
-  const player = players[currentPlayer];
+  const player = game.players[game.currentPlayer];
   console.log(player.name + ' is the current player');
   console.log('They have rolled a ' + roll);
 
@@ -170,6 +174,10 @@ export const roll = (
       if (canLeaveJail) {
         player.isInPenaltyBox = false;
         player.timeInPenaltyBox = 0;
+        console.log(game.jail);
+        game.jail = game.jail.filter(element => element.name != player.name);
+        console.log(game.jail);
+        
         console.log('🏃 ' + player.name + ' is getting out of the penalty box');
         player.place = move(player, roll);
       } else {
@@ -182,14 +190,14 @@ export const roll = (
 
     console.log(player.name + "'s new location is " + player.place);
     console.log(
-      'The category is ' + currentCategory(player, isRock, nextCategory)
+      'The category is ' + currentCategory(player, game.isRock, game.nextCategory)
     );
-    if (getActionFromPrompt(player, rageQuitBoard, autoMode) == 2) {
+    if (getActionFromPrompt(player, game.rageQuitBoard, game.autoMode) == 2) {
       player.jokers--;
       return 2;
     }
 
-    askQuestion(player, questions, isRock, nextCategory);
+    askQuestion(player, game.questions, game.isRock, game.nextCategory);
 
     return 0;
   }
