@@ -1,43 +1,59 @@
 import { Game } from "./game";
 import {
-  checkPlayers,
-  roll,
-  switchPlayer,
-  wasCorrectlyAnswered,
-  wrongAnswer,
+    checkPlayers,
+    roll,
+    switchPlayer,
+    wasCorrectlyAnswered,
+    wrongAnswer,
 } from "./utils";
 import {
-  getGameModeFromPrompt,
-  getGoldLimitFromPrompt,
-  getNuberCellFromPrompt,
-  wantToReplay,
+    getGameModeFromPrompt,
+    getGoldLimitFromPrompt,
+    getLoadSaveFromPrompt,
+    getSaveFromPrompt,
+    wantToReplay,
+    getNuberCellFromPrompt,
 } from "./prompt-service";
+import * as fs from 'fs';
 
 export class GameRunner {
-    
+
     game: Game;
 
     public main(): void {
-    const gameMode = getGameModeFromPrompt();
-    let autoMode = gameMode === "auto";
-    const maxGold = getGoldLimitFromPrompt(autoMode);
-    const playersNames = ["Chet", "Pat", "Sue"];
-    const numberCells = getNuberCellFromPrompt(playersNames);
-    
-        do{
-            this.game = new Game(playersNames, maxGold, autoMode, numberCells);
+        const gameMode = getGameModeFromPrompt();
+        let autoMode = gameMode === "auto";
+        const maxGold = getGoldLimitFromPrompt(autoMode);
+        const playersNames = ["Chet", "Pat", "Sue"];
+        const numberCells = getNuberCellFromPrompt(playersNames);
+        do {
+            let loadSave = getLoadSaveFromPrompt();
+            if (loadSave) {
+                let data = fs.readFileSync('backupGame.json', 'utf8');
+                this.game = JSON.parse(data);
+                console.log("The game has been resumed");
+                this.play();
 
-            const isGameValid = checkPlayers(this.game.players);
-            if (!isGameValid) {
-                console.error("Game should have more than 2 and less than 7 players");
-                return;
+            } else {
+                this.game = new Game(playersNames, maxGold, autoMode, numberCells);
+
+                const isGameValid = checkPlayers(this.game.players);
+                if (!isGameValid) {
+                    console.error("Game should have more than 2 and less than 7 players");
+                    return;
+                }
+                let save = getSaveFromPrompt();
+                if (save) {
+                    fs.writeFileSync('backupGame.json', JSON.stringify(this.game), 'utf8');
+                    return;
+                }
+                this.play();
             }
-            this.play()
-        }while(wantToReplay())
-        
+        } while (wantToReplay())
+
     }
 
-    private play(): void{
+    private play(): void {
         let gameHasEnded = false;
         do {
             const diceRoll = Math.floor(Math.random() * 6) + 1;
@@ -46,7 +62,7 @@ export class GameRunner {
                 diceRoll,
             );
             this.game.nextCategory = ""
-            if(this.game.rageQuitBoard.length === 1 && this.game.players.length === 2) gameHasEnded = true;
+            if (this.game.rageQuitBoard.length === 1 && this.game.players.length === 2) gameHasEnded = true;
             if (action == 0) {
                 if (Math.floor(Math.random() * 3) == 1) {
                     this.game.nextCategory = wrongAnswer(this.game);
@@ -59,10 +75,10 @@ export class GameRunner {
                     if (winner) {
                         this.game.leaderboard.push(this.game.players[this.game.currentPlayer]);
                         this.game.players[this.game.currentPlayer].hasQuit = true;
-                    } 
+                    }
                     if ((this.game.leaderboard.length === (this.game.players.length - this.game.rageQuitBoard.length)) || this.game.leaderboard.length === 3) gameHasEnded = true;
                 }
-            } if(action == 2) {
+            } if (action == 2) {
                 console.log(
                     "🃏" + this.game.players[this.game.currentPlayer].name + " used a joker"
                 );
@@ -81,16 +97,17 @@ export class GameRunner {
             console.log(i + " - " + element.name + " \ ");
             i++;
         });
-        if (this.game.players.length == 2 && this.game.rageQuitBoard.length == 1){
+        if (this.game.players.length == 2 && this.game.rageQuitBoard.length == 1) {
             let j = 1;
             this.game.players.forEach(element => {
-                if(element != this.game.rageQuitBoard[0]){
+                if (element != this.game.rageQuitBoard[0]) {
                     console.log("1 - " + element.name + " \ ");
                     j++;
                     console.log("2 - " + this.game.rageQuitBoard[0].name + " \ ");
                 }
             });
         }
+
     }
 
 }
