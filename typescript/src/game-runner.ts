@@ -1,28 +1,27 @@
 import { Game } from "./game";
 import {
-    checkPlayers,
-    roll,
-    switchPlayer,
-    wasCorrectlyAnswered,
-    wrongAnswer,
+  checkPlayers,
+  roll,
+  switchPlayer,
+  wasCorrectlyAnswered,
+  wrongAnswer,
 } from "./utils";
-import * as readline from "readline-sync";
+import {
+  getGameModeFromPrompt,
+  getGoldLimitFromPrompt,
+  wantToReplay,
+} from "./prompt-service";
 
 export class GameRunner {
     
     game: Game;
 
     public main(): void {
-        let maxGold: number = readline.question(
-            "Maximum gold wished ? (6 min) "
-        );
-        if (maxGold < 6) {
-            console.log("Error : you cannot have less than 6 gold, maximum gold are set to 6");
-            maxGold = 6;
-        }
-
+    const gameMode = getGameModeFromPrompt();
+    let autoMode = gameMode === "auto";
+    const maxGold = getGoldLimitFromPrompt(autoMode);
         do{
-            this.game = new Game(["Chet", "Pat", "Sue"], maxGold);
+            this.game = new Game(["Chet", "Pat", "Sue"], maxGold, autoMode);
 
             const isGameValid = checkPlayers(this.game.players);
             if (!isGameValid) {
@@ -30,7 +29,7 @@ export class GameRunner {
                 return;
             }
             this.play()
-        }while(this.wantToReplay())
+        }while(wantToReplay())
         
     }
 
@@ -45,13 +44,14 @@ export class GameRunner {
                 this.game.isRock,
                 diceRoll,
                 this.game.nextCategory,
-                this.game.rageQuitBoard
+                this.game.rageQuitBoard,
+                this.game.autoMode
             );
             this.game.nextCategory = ""
 
             if (action == 0) {
                 if (Math.floor(Math.random() * 3) == 1) {
-                    this.game.nextCategory = wrongAnswer(this.game.players, this.game.currentPlayer, this.game.nextCategory);
+                    this.game.nextCategory = wrongAnswer(this.game.players, this.game.currentPlayer, this.game.nextCategory, this.game.autoMode);
                 } else {
                     let winner = wasCorrectlyAnswered(
                         this.game.players,
@@ -85,14 +85,6 @@ export class GameRunner {
         })
     }
 
-    private wantToReplay() {
-        let askPrompt: string = readline.question("Souhaitez-vous rejouer ? (Y/N)");
-        if (askPrompt == "Y" || askPrompt == "y") {
-            return true;
-        }else{
-            return false;
-        }
-    }
 }
 
 new GameRunner().main();
