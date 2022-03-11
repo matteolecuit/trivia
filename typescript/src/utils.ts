@@ -182,7 +182,10 @@ export const askCategory = (player: Player) => {
       "Which category would you like to give to next player ? : "
     );
 
-    if (validCategories.includes(askPrompt)) {
+    if (validCategories.includes(askPrompt) || askPrompt.length == 0) {
+      if (askPrompt.length == 0) {
+        askPrompt = validCategories[0];
+      }
       isValid = true;
     } else {
       console.log("Please choose a valid category")
