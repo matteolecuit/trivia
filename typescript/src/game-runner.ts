@@ -21,11 +21,7 @@ export class GameRunner {
     game: Game;
 
     public main(): void {
-        const gameMode = getGameModeFromPrompt();
-        let autoMode = gameMode === "auto";
-        const maxGold = getGoldLimitFromPrompt(autoMode);
-        const playersNames = ["Chet", "Pat", "Sue"];
-        const numberCells = getNuberCellFromPrompt(playersNames);
+
         do {
             let loadSave = getLoadSaveFromPrompt();
             if (loadSave) {
@@ -35,6 +31,12 @@ export class GameRunner {
                 this.play();
 
             } else {
+                const gameMode = getGameModeFromPrompt();
+                let autoMode = gameMode === "auto";
+                const maxGold = getGoldLimitFromPrompt(autoMode);
+                const playersNames = ["Chet", "Pat", "Sue"];
+                const numberCells = getNuberCellFromPrompt(playersNames);
+
                 this.game = new Game(playersNames, maxGold, autoMode, numberCells);
 
                 const isGameValid = checkPlayers(this.game.players);
