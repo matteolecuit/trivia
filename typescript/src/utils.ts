@@ -28,32 +28,76 @@ export const didPlayerWin = (player: Player, maxGold: number) => {
   return player.gold >= maxGold;
 };
 
-export const currentCategory = (
-  player: Player,
-  isRock: boolean,
-  nextCategory: string
-) => {
+interface CategoriesLength {
+  category: Category;
+  length: number;
+}
+export const currentCategory = (nextCategory: string, questions: Questions) => {
   if (nextCategory.length > 0) {
-    let choosenCategory = nextCategory;
+    let chosenCategory = nextCategory;
     console.log(
-      `The category has be defined previously and will be ${choosenCategory}`
+      `The category has be defined previously and will be ${chosenCategory}`
     );
     nextCategory = '';
-    return choosenCategory;
+    return chosenCategory;
   }
 
-  let category: Category = 'rock';
-  if (player.place == 0) category = 'pop';
-  if (player.place == 1) category = 'science';
-  if (player.place == 2) category = 'sports';
-  if (player.place == 4) category = 'pop';
-  if (player.place == 5) category = 'science';
-  if (player.place == 6) category = 'sports';
-  if (player.place == 8) category = 'pop';
-  if (player.place == 9) category = 'science';
-  if (player.place == 10) category = 'sports';
+  const categoriesLength: CategoriesLength[] = [
+    {
+      category: 'rock',
+      length: questions.rock.length
+    },
+    {
+      category: 'pop',
+      length: questions.pop.length
+    },
+    {
+      category: 'science',
+      length: questions.science.length
+    },
+    {
+      category: 'sports',
+      length: questions.sports.length
+    },
+    {
+      category: 'techno',
+      length: questions.techno.length
+    },
+    {
+      category: 'rap',
+      length: questions.rap.length
+    },
+    {
+      category: 'philosophy',
+      length: questions.philosophy.length
+    },
+    {
+      category: 'literature',
+      length: questions.literature.length
+    },
+    {
+      category: 'geography',
+      length: questions.geography.length
+    },
+    {
+      category: 'people',
+      length: questions.people.length
+    }
+  ];
 
-  if (category == 'rock' && !isRock) category = 'techno';
+  let totalLength = categoriesLength
+    .map((a) => a.length)
+    .reduce(function (a, b) {
+      return a + b;
+    });
+  let chosenQuestion = Math.floor(Math.random() * totalLength);
+  let category: Category;
+  for (const c of categoriesLength) {
+    if (!category) {
+      chosenQuestion -= c.length;
+      if (chosenQuestion <= 0) category = c.category;
+    }
+  }
   return category;
 };
 export const askQuestion = (
@@ -63,7 +107,7 @@ export const askQuestion = (
   nextCategory: string
 ) => {
   if (!player.hasQuit) {
-    const category = currentCategory(player, isRock, nextCategory);
+    const category = currentCategory(nextCategory, questions);
     const availableQuestions = questions[category] as string[];
     if (availableQuestions.length <= 0) {
       generateQuestions(questions, 10, isRock);
@@ -72,17 +116,15 @@ export const askQuestion = (
   }
 };
 
-export const wrongAnswer = (
-  game: Game
-) => {
+export const wrongAnswer = (game: Game) => {
   const player = game.players[game.currentPlayer];
   console.log('Question was incorrectly answered');
   console.log(player.name + ' was sent to the penalty box');
   player.isInPenaltyBox = true;
   console.log(game.jail.length, game.jailSize);
-  
+
   console.log(game.jail);
-  
+
   if (game.jail.length >= game.jailSize) {
     let freePlayer = game.jail.pop();
     freePlayer.isInPenaltyBox = false;
@@ -151,10 +193,7 @@ export const createRockQuestion = (index: number, isRock: boolean) => {
   return type + ' Question ' + index;
 };
 
-export const roll = (
-  game: Game,
-  roll: number,
-) => {
+export const roll = (game: Game, roll: number) => {
   const player = game.players[game.currentPlayer];
   console.log(player.name + ' is the current player');
   console.log('They have rolled a ' + roll);
@@ -175,9 +214,9 @@ export const roll = (
         player.isInPenaltyBox = false;
         player.timeInPenaltyBox = 0;
         console.log(game.jail);
-        game.jail = game.jail.filter(element => element.name != player.name);
+        game.jail = game.jail.filter((element) => element.name != player.name);
         console.log(game.jail);
-        
+
         console.log('🏃 ' + player.name + ' is getting out of the penalty box');
         player.place = move(player, roll);
       } else {
@@ -190,7 +229,7 @@ export const roll = (
 
     console.log(player.name + "'s new location is " + player.place);
     console.log(
-      'The category is ' + currentCategory(player, game.isRock, game.nextCategory)
+      'The category is ' + currentCategory(game.nextCategory, game.questions)
     );
     if (getActionFromPrompt(player, game.rageQuitBoard, game.autoMode) == 2) {
       player.jokers--;
@@ -222,6 +261,11 @@ export const generateQuestions = (
     questions.pop.push('Pop Question ' + i);
     questions.science.push('Science Question ' + i);
     questions.sports.push('Sports Question ' + i);
+    questions.geography.push('Geography Question ' + i);
+    questions.rap.push('Rap Question ' + i);
+    questions.philosophy.push('Philosophy Question ' + i);
+    questions.literature.push('Literature Question ' + i);
+    questions.people.push('People Question ' + i);
     if (isRock) questions.rock.push('Rock Question ' + i);
     else questions.techno.push('Rock Question ' + i);
   }

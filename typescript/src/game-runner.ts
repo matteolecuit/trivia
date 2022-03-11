@@ -46,7 +46,7 @@ export class GameRunner {
                 diceRoll,
             );
             this.game.nextCategory = ""
-
+            if(this.game.rageQuitBoard.length === 1 && this.game.players.length === 2) gameHasEnded = true;
             if (action == 0) {
                 if (Math.floor(Math.random() * 3) == 1) {
                     this.game.nextCategory = wrongAnswer(this.game);
@@ -80,7 +80,17 @@ export class GameRunner {
         this.game.leaderboard.forEach(element => {
             console.log(i + " - " + element.name + " \ ");
             i++;
-        })
+        });
+        if (this.game.players.length == 2 && this.game.rageQuitBoard.length == 1){
+            let j = 1;
+            this.game.players.forEach(element => {
+                if(element != this.game.rageQuitBoard[0]){
+                    console.log("1 - " + element.name + " \ ");
+                    j++;
+                    console.log("2 - " + this.game.rageQuitBoard[0].name + " \ ");
+                }
+            });
+        }
     }
 
 }
