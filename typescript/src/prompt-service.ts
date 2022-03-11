@@ -1,14 +1,14 @@
-import * as readline from "readline-sync";
-import { Player } from "./types";
-import { categories } from "../enums/categories.enum";
+import * as readline from 'readline-sync';
+import { Player } from './types';
+import { categories } from '../enums/categories.enum';
 
 export const getGoldLimitFromPrompt = (autoMode: boolean) => {
   const defaultMaxGold = 6;
   if (autoMode) return defaultMaxGold;
-  let maxGold: number = readline.question("Maximum gold wished ? (6 min) ");
+  let maxGold: number = readline.question('Maximum gold wished ? (6 min) ');
   if (maxGold < 6) {
     console.log(
-      "Error : you cannot have less than 6 gold, maximum gold are set to 6"
+      'Error : you cannot have less than 6 gold, maximum gold are set to 6'
     );
     maxGold = defaultMaxGold;
   }
@@ -17,15 +17,15 @@ export const getGoldLimitFromPrompt = (autoMode: boolean) => {
 
 export const getGameModeFromPrompt = () => {
   let gameMode: number = readline.question(
-    "Do you wish to play: 1 - Manually  2 - Auto"
+    'Do you wish to play: 1 - Manually  2 - Auto'
   );
-  if (gameMode == 2) return "auto";
-  return "manual";
+  if (gameMode == 2) return 'auto';
+  return 'manual';
 };
 
 export const getCategoryFromPrompt = (player: Player, autoMode: boolean) => {
   let isValid = false;
-  let askPrompt = "";
+  let askPrompt = '';
   let validCategories: string[] = Object.values(categories);
 
   if (autoMode) {
@@ -36,13 +36,13 @@ export const getCategoryFromPrompt = (player: Player, autoMode: boolean) => {
     do {
       console.table(objectCategories);
       askPrompt = readline.question(
-        "Which category would you like to give to next player ? : "
+        'Which category would you like to give to next player ? : '
       );
 
       if (Object.keys(objectCategories).includes(askPrompt)) {
         isValid = true;
       } else {
-        console.log("Please choose a valid category");
+        console.log('Please choose a valid category');
       }
     } while (!isValid);
 
@@ -56,13 +56,13 @@ export const getRockTypeFromPrompt = (autoMode: boolean) => {
     return true;
   }
   let rockPrompt: string = readline.question(
-    "Tu veux du rock mon copain ? (Y/N) : "
+    'Tu veux du rock mon copain ? (Y/N) : '
   );
 
-  if (rockPrompt.toLowerCase() === "y") {
-    console.log("You choose Rock");
+  if (rockPrompt.toLowerCase() === 'y') {
+    console.log('You choose Rock');
     return true;
-  } else if (rockPrompt.toLowerCase() === "n") {
+  } else if (rockPrompt.toLowerCase() === 'n') {
     console.log("You'll have Techno questions");
     return false;
   } else {
@@ -83,23 +83,23 @@ export const getActionFromPrompt = (
     return action;
   }
   let askPrompt: string = readline.question(
-    "Choisissez votre action ? : \
+    'Choisissez votre action ? : \
     1- Répondre à la question \
     2- Utiliser un joker \
-    3- Quitter la partie"
+    3- Quitter la partie'
   );
 
-  if (askPrompt === "1") {
+  if (askPrompt === '1') {
     console.log("You'll answer to this question");
-  } else if (askPrompt === "2") {
+  } else if (askPrompt === '2') {
     if (player.jokers > 0) {
-      console.log("You skip the question, you lost your Joker !");
+      console.log('You skip the question, you lost your Joker !');
     } else {
       console.log("You don't have any jokers, You'll answer to this question");
       return 1;
     }
-  } else if (askPrompt === "3") {
-    console.log("You are out !");
+  } else if (askPrompt === '3') {
+    console.log('You are out !');
     player.hasQuit = true;
     rageQuitBoard.push(player);
   } else {
@@ -107,4 +107,13 @@ export const getActionFromPrompt = (
     return 0;
   }
   return Number(askPrompt);
+};
+
+export const wantToReplay = () => {
+  let askPrompt: string = readline.question('Souhaitez-vous rejouer ? (Y/N)');
+  if (askPrompt == 'Y' || askPrompt == 'y') {
+    return true;
+  } else {
+    return false;
+  }
 };

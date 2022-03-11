@@ -1,12 +1,12 @@
-import { getActionFromPrompt, getCategoryFromPrompt } from "./prompt-service";
-import { Category, Player, Questions } from "./types";
+import { getActionFromPrompt, getCategoryFromPrompt } from './prompt-service';
+import { Category, Player, Questions } from './types';
 
 export const initPlayers = (playerNames: string[]) => {
   let playerCount = 0;
   const players: Player[] = playerNames.map((playerName) => {
     playerCount += 1;
-    console.log(playerName + " was added");
-    console.log("They are " + playerCount + " players");
+    console.log(playerName + ' was added');
+    console.log('They are ' + playerCount + ' players');
     return {
       name: playerName,
       gold: 0,
@@ -16,8 +16,8 @@ export const initPlayers = (playerNames: string[]) => {
       timeInPenaltyBox: 0,
       isInPenaltyBox: false,
       hasQuit: false,
-      designedCategory: "",
-      prison: 0,
+      designedCategory: '',
+      prison: 0
     };
   });
   return players;
@@ -37,22 +37,22 @@ export const currentCategory = (
     console.log(
       `The category has be defined previously and will be ${choosenCategory}`
     );
-    nextCategory = "";
+    nextCategory = '';
     return choosenCategory;
   }
 
-  let category: Category = "rock";
-  if (player.place == 0) category = "pop";
-  if (player.place == 1) category = "science";
-  if (player.place == 2) category = "sports";
-  if (player.place == 4) category = "pop";
-  if (player.place == 5) category = "science";
-  if (player.place == 6) category = "sports";
-  if (player.place == 8) category = "pop";
-  if (player.place == 9) category = "science";
-  if (player.place == 10) category = "sports";
+  let category: Category = 'rock';
+  if (player.place == 0) category = 'pop';
+  if (player.place == 1) category = 'science';
+  if (player.place == 2) category = 'sports';
+  if (player.place == 4) category = 'pop';
+  if (player.place == 5) category = 'science';
+  if (player.place == 6) category = 'sports';
+  if (player.place == 8) category = 'pop';
+  if (player.place == 9) category = 'science';
+  if (player.place == 10) category = 'sports';
 
-  if (category == "rock" && !isRock) category = "techno";
+  if (category == 'rock' && !isRock) category = 'techno';
   return category;
 };
 export const askQuestion = (
@@ -78,15 +78,15 @@ export const wrongAnswer = (
   autoMode: boolean
 ) => {
   const player = players[currentPlayer];
-  console.log("Question was incorrectly answered");
-  console.log(player.name + " was sent to the penalty box");
+  console.log('Question was incorrectly answered');
+  console.log(player.name + ' was sent to the penalty box');
   player.isInPenaltyBox = true;
   let designedCategory = getCategoryFromPrompt(player, autoMode);
   player.prison += 1;
 
   player.streak = 0;
   console.log(
-    "🍦Streak has been reset for " + player.name + " streak: " + player.streak
+    '🍦Streak has been reset for ' + player.name + ' streak: ' + player.streak
   );
   currentPlayer += 1;
   if (currentPlayer == players.length) currentPlayer = 0;
@@ -106,17 +106,17 @@ export const wasCorrectlyAnswered = (
 ) => {
   const player = players[currentPlayer];
   if (!player.hasQuit) {
-    console.log("Answer was correct!!!!");
+    console.log('Answer was correct!!!!');
 
     player.streak += 1;
     player.gold += player.streak;
 
     console.log(
-      "🔥" +
+      '🔥' +
         player.name +
-        " now 2has " +
+        ' now 2has ' +
         player.gold +
-        " Gold Coins and has a streak of " +
+        ' Gold Coins and has a streak of ' +
         player.streak
     );
 
@@ -137,8 +137,8 @@ export const checkPlayers = (players: Player[]) => {
 
 export const createRockQuestion = (index: number, isRock: boolean) => {
   let type: string;
-  type = isRock ? "Rock" : "Techno";
-  return type + " Question " + index;
+  type = isRock ? 'Rock' : 'Techno';
+  return type + ' Question ' + index;
 };
 
 export const roll = (
@@ -152,8 +152,8 @@ export const roll = (
   autoMode: boolean
 ) => {
   const player = players[currentPlayer];
-  console.log(player.name + " is the current player");
-  console.log("They have rolled a " + roll);
+  console.log(player.name + ' is the current player');
+  console.log('They have rolled a ' + roll);
 
   if (!player.hasQuit) {
     if (player.isInPenaltyBox) {
@@ -163,18 +163,18 @@ export const roll = (
       const canLeaveJail = Math.floor(Math.random()) < chancesOfGettinOut;
 
       console.log(
-        "🏃🏃You have " +
+        '🏃🏃You have ' +
           Math.floor(chancesOfGettinOut * 100) +
-          "% chance to exit."
+          '% chance to exit.'
       );
       if (canLeaveJail) {
         player.isInPenaltyBox = false;
         player.timeInPenaltyBox = 0;
-        console.log("🏃 " + player.name + " is getting out of the penalty box");
+        console.log('🏃 ' + player.name + ' is getting out of the penalty box');
         player.place = move(player, roll);
       } else {
         player.timeInPenaltyBox++;
-        console.log(player.name + " is not getting out of the penalty box");
+        console.log(player.name + ' is not getting out of the penalty box');
       }
       return 1;
     }
@@ -182,7 +182,7 @@ export const roll = (
 
     console.log(player.name + "'s new location is " + player.place);
     console.log(
-      "The category is " + currentCategory(player, isRock, nextCategory)
+      'The category is ' + currentCategory(player, isRock, nextCategory)
     );
     if (getActionFromPrompt(player, rageQuitBoard, autoMode) == 2) {
       player.jokers--;
@@ -209,13 +209,13 @@ export const generateQuestions = (
   amount: number,
   isRock: boolean
 ) => {
-  console.log("🃏 Generating " + amount + " cards...");
+  console.log('🃏 Generating ' + amount + ' cards...');
   for (let i = 0; i < amount; i++) {
-    questions.pop.push("Pop Question " + i);
-    questions.science.push("Science Question " + i);
-    questions.sports.push("Sports Question " + i);
-    if (isRock) questions.rock.push("Rock Question " + i);
-    else questions.techno.push("Rock Question " + i);
+    questions.pop.push('Pop Question ' + i);
+    questions.science.push('Science Question ' + i);
+    questions.sports.push('Sports Question ' + i);
+    if (isRock) questions.rock.push('Rock Question ' + i);
+    else questions.techno.push('Rock Question ' + i);
   }
   return questions;
 };
