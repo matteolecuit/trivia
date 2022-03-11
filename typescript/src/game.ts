@@ -1,6 +1,6 @@
-import { generateQuestions, initPlayers } from "./utils";
-import { Player, Questions } from "./types";
-import { getRockTypeFromPrompt } from "./prompt-service";
+import { generateQuestions, initPlayers } from './utils';
+import { Player, Questions } from './types';
+import { getRockTypeFromPrompt } from './prompt-service';
 
 export class Game {
   public players: Player[];
@@ -16,11 +16,22 @@ export class Game {
   constructor(playerNames: string[], maxGold: number, autoMode: boolean) {
     this.players = initPlayers(playerNames);
     this.maxGold = maxGold;
-    this.questions = { pop: [], science: [], rock: [], sports: [], techno: [] };
+    this.questions = {
+      pop: [],
+      science: [],
+      rock: [],
+      sports: [],
+      techno: [],
+      geography: [],
+      literature: [],
+      people: [],
+      philosophy: [],
+      rap: []
+    };
     this.isRock = getRockTypeFromPrompt(autoMode);
     this.leaderboard = [];
     this.rageQuitBoard = [];
-    this.nextCategory = "";
+    this.nextCategory = '';
     this.autoMode = autoMode;
     generateQuestions(this.questions, 2, this.isRock);
     /*for (let i = 0; i < 50; i++) {

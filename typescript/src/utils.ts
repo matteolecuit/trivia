@@ -214,6 +214,11 @@ export const generateQuestions = (
     questions.pop.push('Pop Question ' + i);
     questions.science.push('Science Question ' + i);
     questions.sports.push('Sports Question ' + i);
+    questions.geography.push('Geography Question ' + i);
+    questions.rap.push('Rap Question ' + i);
+    questions.philosophy.push('Philosophy Question ' + i);
+    questions.literature.push('Literature Question ' + i);
+    questions.people.push('People Question ' + i);
     if (isRock) questions.rock.push('Rock Question ' + i);
     else questions.techno.push('Rock Question ' + i);
   }
