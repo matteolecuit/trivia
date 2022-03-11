@@ -34,11 +34,13 @@ export class GameRunner {
                 game.isRock,
                 diceRoll,
                 game.rageQuitBoard
+                game.nextCategory
             );
+            game.nextCategory = ""
 
-            if (action != 2) {
-                if (Math.floor(Math.random() * 10) == 7) {
-                    wrongAnswer(game.players, game.currentPlayer);
+            if (action == 0) {
+                if (Math.floor(Math.random() * 3) == 1) {
+                    game.nextCategory = wrongAnswer(game.players, game.currentPlayer, game.nextCategory);
                 } else {
                     let winner = wasCorrectlyAnswered(
                         game.players,
@@ -51,7 +53,7 @@ export class GameRunner {
                     } 
                     if ((game.leaderboard.length === (game.players.length - game.rageQuitBoard.length)) || game.leaderboard.length === 3) gameHasEnded = true;
                 }
-            } else {
+            } if(action == 2) {
                 console.log(
                     "🃏" + game.players[game.currentPlayer].name + " used a joker"
                 );

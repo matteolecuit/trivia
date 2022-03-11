@@ -1,4 +1,4 @@
-import { askRockType, initPlayers } from "./utils";
+import { askRockType, generateQuestions, initPlayers } from "./utils";
 import { Player, Questions } from "./types";
 
 export class Game {
@@ -9,6 +9,7 @@ export class Game {
     public questions: Questions;
 	public leaderboard: Player[];
 	public rageQuitBoard: Player[];
+    public nextCategory: string;
 
     constructor(playerNames: string[], maxGold: number) {
         this.players = initPlayers(playerNames);
@@ -17,12 +18,14 @@ export class Game {
         this.isRock = askRockType();
 		this.leaderboard = [];
 		this.rageQuitBoard = [];
-        for (let i = 0; i < 50; i++) {
+        this.nextCategory = "";
+        generateQuestions(this.questions, 2, this.isRock);
+        /*for (let i = 0; i < 50; i++) {
             this.questions.pop.push("Pop Question " + i);
             this.questions.science.push("Science Question " + i);
             this.questions.sports.push("Sports Question " + i);
             if (this.isRock) this.questions.rock.push("Rock Question " + i);
             else this.questions.techno.push("Rock Question " + i);
-        }
+        }*/
     }
 }
