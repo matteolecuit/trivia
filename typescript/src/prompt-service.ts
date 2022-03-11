@@ -31,20 +31,22 @@ export const getCategoryFromPrompt = (player: Player, autoMode: boolean) => {
   if (autoMode) {
     return validCategories[Math.floor(Math.random() * validCategories.length)];
   } else {
+    const objectCategories = {};
+    validCategories.map((c, i) => (objectCategories[i + 1] = c));
     do {
-      console.log(validCategories);
+      console.table(objectCategories);
       askPrompt = readline.question(
         "Which category would you like to give to next player ? : "
       );
 
-      if (validCategories.includes(askPrompt)) {
+      if (Object.keys(objectCategories).includes(askPrompt)) {
         isValid = true;
       } else {
         console.log("Please choose a valid category");
       }
     } while (!isValid);
 
-    return askPrompt;
+    return objectCategories[askPrompt];
   }
 };
 
