@@ -7,6 +7,8 @@ export class Game {
     public isRock: boolean;
     public maxGold: number;
     public questions: Questions;
+	public leaderboard: Player[];
+	public rageQuitBoard: Player[];
     public nextCategory: string;
 
     constructor(playerNames: string[], maxGold: number) {
@@ -14,6 +16,8 @@ export class Game {
         this.maxGold = maxGold;
         this.questions = { pop: [], science: [], rock: [], sports: [], techno: [] };
         this.isRock = askRockType();
+		this.leaderboard = [];
+		this.rageQuitBoard = [];
         this.nextCategory = "";
         generateQuestions(this.questions, 2, this.isRock);
         /*for (let i = 0; i < 50; i++) {

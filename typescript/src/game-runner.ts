@@ -33,7 +33,8 @@ export class GameRunner {
                 game.questions,
                 game.isRock,
                 diceRoll,
-                game.nextCategory
+                game.nextCategory,
+                game.rageQuitBoard
             );
             game.nextCategory = ""
 
@@ -46,7 +47,11 @@ export class GameRunner {
                         game.currentPlayer,
                         game.maxGold
                     );
-                    if (winner) gameHasEnded = true;
+                    if (winner) {
+                        game.leaderboard.push(game.players[game.currentPlayer]);
+                        game.players[game.currentPlayer].hasQuit = true;
+                    } 
+                    if ((game.leaderboard.length === (game.players.length - game.rageQuitBoard.length)) || game.leaderboard.length === 3) gameHasEnded = true;
                 }
             } if(action == 2) {
                 console.log(
@@ -55,6 +60,18 @@ export class GameRunner {
             }
             game.currentPlayer = switchPlayer(game.currentPlayer, game.players);
         } while (!gameHasEnded);
+        if (game.leaderboard.length + game.rageQuitBoard.length >= 3) {
+            game.rageQuitBoard.reverse();
+            game.rageQuitBoard.forEach(element => {
+                game.leaderboard.push(element);
+            })
+        }
+        let i = 1;
+        console.log("LeaderBoard: \ ");
+        game.leaderboard.forEach(element => {
+            console.log(i + " - " + element.name + " \ ");
+            i++;
+        })
     }
 }
 
