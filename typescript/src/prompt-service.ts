@@ -23,6 +23,25 @@ export const getGameModeFromPrompt = () => {
   return 'manual';
 };
 
+export const getSaveFromPrompt = () => {
+  let save: string = readline.question(
+    'Do you want to quit and save ? (Y/N)'
+  );
+  if (save != 'Y' && save != 'y') {
+    return false;
+  }
+  return true;
+};
+
+export const getLoadSaveFromPrompt = () => {
+  let save: string = readline.question(
+    'Do you want to load save ? (Y/N)'
+  );
+  if (save != 'Y' && save != 'y') {
+    return false;
+  }
+  return true;
+};
 export const getCategoryFromPrompt = (player: Player, autoMode: boolean) => {
   let isValid = false;
   let askPrompt = '';
