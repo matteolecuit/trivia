@@ -13,6 +13,7 @@ export const initPlayers = (playerNames: string[]) => {
       place: 0,
       streak: 0,
       jokers: 1,
+      timeInPenaltyBox: 0,
       isInPenaltyBox: false,
       hasQuit: false,
       designedCategory: "",
@@ -156,18 +157,22 @@ export const roll = (
 
   if (!player.hasQuit) {
     if (player.isInPenaltyBox) {
-      const rollExitPrison = Math.floor(Math.random() * player.prison) + 1;
-      console.log(
-        "🏃🏃You have 1/" +
-          player.prison +
-          " chance to exit. Result must be 1 : " +
-          rollExitPrison
+      const chancesOfGettinOut = Math.floor(
+        1 / player.prison + 1 / (10 - player.timeInPenaltyBox)
       );
-      if (rollExitPrison == 1) {
+
+      const canLeaveJail = Math.floor(Math.random()) > chancesOfGettinOut;
+
+      console.log(
+        "🏃🏃You have " + chancesOfGettinOut * 100 + "% chance to exit."
+      );
+      if (canLeaveJail) {
         player.isInPenaltyBox = false;
+        player.timeInPenaltyBox = 0;
         console.log("🏃 " + player.name + " is getting out of the penalty box");
         player.place = move(player, roll);
       } else {
+        player.timeInPenaltyBox++;
         console.log(player.name + " is not getting out of the penalty box");
       }
       return 1;
