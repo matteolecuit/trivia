@@ -1,3 +1,5 @@
+import { logs } from "./game-runner";
+
 export const generateRandom = (
   limit: number,
   rolls: number[],
@@ -12,4 +14,5 @@ export const generateRandom = (
 
 export const consoleLog = (message: string) => {
   console.log(message);
+  logs.push(message);
 };

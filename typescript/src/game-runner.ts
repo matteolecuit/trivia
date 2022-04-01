@@ -1,5 +1,6 @@
 import { Game } from "./game";
 import { generateRandom } from "./utils";
+export let logs: string[] = [];
 
 export class GameRunner {
   public static main() {
@@ -20,6 +21,7 @@ export class GameRunner {
       }
     } while (notAWinner);
     console.log(rolls);
+    console.log(logs);
     return true;
   }
 }
