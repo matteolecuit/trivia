@@ -29,6 +29,7 @@
   "author": "Felix Blechschmitt",
   "license": "GPL-3.0",
   "dependencies": {
+    "fast-csv": "4.3.6",
     "typescript": "^2.9.2"
   },
   "devDependencies": {
