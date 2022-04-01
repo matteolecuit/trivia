@@ -9,15 +9,17 @@ export class GameRunner {
     game.add("Sue");
 
     let notAWinner;
+    let rolls: number[] = [];
     do {
-      game.roll(generateRandom(6) + 1);
+      game.roll(generateRandom(6, rolls) + 1);
 
-      if (generateRandom(10) == 7) {
+      if (generateRandom(10, rolls) == 7) {
         notAWinner = game.wrongAnswer();
       } else {
         notAWinner = game.wasCorrectlyAnswered();
       }
     } while (notAWinner);
+    console.log(rolls);
     return true;
   }
 }

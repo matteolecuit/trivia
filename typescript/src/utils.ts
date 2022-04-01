@@ -1,5 +1,13 @@
-export const generateRandom = (limit: number, fixedNumber?: number) => {
-  return fixedNumber ?? Math.floor(Math.random() * limit) + 1;
+export const generateRandom = (
+  limit: number,
+  rolls: number[],
+  fixedNumber?: number
+) => {
+  const result = fixedNumber
+    ? fixedNumber
+    : Math.floor(Math.random() * limit) + 1;
+  rolls.push(result);
+  return result;
 };
 
 export const consoleLog = (message: string) => {
