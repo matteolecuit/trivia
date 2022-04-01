@@ -29,10 +29,10 @@
   "author": "Felix Blechschmitt",
   "license": "GPL-3.0",
   "dependencies": {
-    "fast-csv": "4.3.6",
     "typescript": "^2.9.2"
   },
   "devDependencies": {
+    "@types/node": "^17.0.23",
     "chai": "^4.1.2",
     "mocha": "^5.2.0",
     "nyc": "^15.1.0",

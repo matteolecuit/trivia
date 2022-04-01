@@ -1,6 +1,4 @@
 import * as fs from "fs";
-import * as csv from "fast-csv";
-
 import { Game } from "./game";
 import { generateRandom } from "./utils";
 export let logs: string[] = [];
